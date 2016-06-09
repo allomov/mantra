@@ -1,0 +1,33 @@
+---
+slack-notification-url: "https://hooks.slack.com/services/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"
+slack-channel: "#general"
+slack-username: "Merrill-Manifest-Generator-Bot"
+github-repo: git@github.com:pivotalservices/merrill.git
+git-repo-private-key: |
+  -----BEGIN RSA PRIVATE KEY-----
+  MIIEogIBAAKCAQEAz/SJ469kiOr3CysK7Tqp1ZQPYFviObH6N4ucmAiWb78KxqM+
+  BBMEsmdo/2Pe0CKfiMGW14LA4JlpQIguuNixUiSffBo7zlfxigm8MpgdF3i7kqOv
+  Ffv+zOpLfq1i0rRz+cV9RsowRxbRkWekiy0YqDqVW4pyzfXIMd81dhjQh25w6Zs+
+  PFyAlg9bU7QUl0F9vljqpHii0n7hCL2hcKN7Jq0XF4AHPyQg24UgagU955wvlWvx
+  iJZ4fRcG1bSNTCJvParS7Pl/wnCC73WJ0d8MMOVHbk3G0lYPtbaCwUctZ47MjB4f
+  j6+40sfkfoJZQ6eb43AHnCZVypS652hcKGiLpQIDAQABAoIBAGdKZ1MYQy9exeZe
+  MscyZDkZmama+fr+U/JS/izl1xMaKRgQ7TTI3YRfqN9xk7J+AA/FWE8jOvpUONs8
+  yTg3KZxLZIwX26zaMbcGrtvSgmCuLzze4JBi4mSV23nIVVWjHBfr6BXJR8GHrAA1
+  Ip2egKjOsHEPi4aRliZvX/aQzML3SxcpttyxaRT5ytokMSjNSNRk2fTdcCliLbnD
+  +UOsGwWiZpC1BDZXHeKsnyGLgK5cgG4Pygnr0gDZY73wflnGHWFBQhIaLfdZdBb6
+  zXyYD6XGM3p+SUOL0JxWLFCMLWntpzn0LRx3RBmicXiW82dLrjVo1nQw9+TtMOv3
+  kWrO9OECgYEA6FpU0AngbKDnWAjG0peYrIKFgF/9Gk60JCQsXkHyNJ/mVt4sjFtG
+  y5Ajh6QxKReF1Be+W7di2CH9/Sb0xYdeiFAWtqNeBEOMOZYAV22zoFAb97SIlSrT
+  oZSquzY6jXldZU1lH0Pknklmz8Y4jcRSHvUKDXlr2MHvXMP7RIHKvTcCgYEA5R6O
+  m/LgMVn8ahB8jTSVPO41Ely1oH6dUghaQEqFf0MJmKBKESq+SHId8wHD9Sbuirg/
+  /KtYBe0ouvtIddX4AIoO5NVOudUGzLZEBntHUnpAln/P3COJkd0LdbN/5okguMkb
+  uMHJdqL/OWAUGOVzpM+DxK53c70r1VpIr3IETAMCgYAVP1VsJMsSA/DD2yGbVmOO
+  uuzMXXq+sh3FBE3OXMdySoD8xppaR2qE6Oxm1fvs3wrM51Lv/igazZj1Ul+lxIg/
+  fNtm3i+VwjuLdI0ZcZ2wdkLodujagy0RJJAsSHw4PbXtspMhtcqtMtck/uJjDGXa
+  ENxXeRgEnU9vMzjB/gB1JwKBgDIttAvhcEo+q/JKtAx01K5oeQURetGwiSHbJHDq
+  ITyS4PolOLNzygKxw29iFpmNMjb9TT44BGof24i/2cm817i+g66ILNq0Fe4liNZm
+  j2M31Qdg7JQI0Gs6nvTjIALMS3dMzB51inrKDd1x9lTRg7c3n2Mm1pBpgL0ULdEG
+  xnwjAoGAD+S5jsF2m0amYbR3pUwWFHmThXhB+ud6Sx8WVt4lL4zPA0doh8yTrt0h
+  srNaVWjGC6DHW2u4f1ArkGB3Csi/RtYFGV06V2j9Z5vgEf/1BCW0peiLqsiUQfRo
+  zsZ7pCigQzaSJDYjkvUXibgXHK7cuZ+D6CdQVy1QGuxWsP4lzc0=
+  -----END RSA PRIVATE KEY-----

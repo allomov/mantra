@@ -1,0 +1,13 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source: {repository: "allomov/ruby", tag: "manifest-generator"}
+inputs:
+  - name: merrill-manifest-generator-stable
+run:
+  # path: ci/scripts/run-tests
+  # dir: merrill-manifest-generator-stable/manifest-generator
+  path: bash
+  args:
+    - "ci/scripts/run-tests"

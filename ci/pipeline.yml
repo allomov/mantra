@@ -1,0 +1,42 @@
+---
+resources:
+- name: merrill-manifest-generator-dev
+  type: git
+  source:
+    uri: {{github-repo}}
+    branch: manifest-generator-dev
+    private_key: {{git-repo-private-key}}
+- name: slack-notification
+  type: slack-notification
+  source:
+    url: {{slack-notification-url}}
+
+jobs:
+- name: dev-version
+  plan:
+  - get: merrill-manifest-generator-dev
+    trigger: true
+  - task: run-tests
+    file: merrill-manifest-generator-dev/manifest-generator/ci/tasks/run-tests-dev.yml
+    on_failure:
+      do:
+      - put: slack-notification
+        params:
+          channel: {{slack-channel}}
+          username: {{slack-username}}
+          icon_emoji: ":robot_face:"
+          text: "@here dev version of manifest-generator seems to be broken"
+- name: stable-version
+  plan:
+  - get: merrill-manifest-generator-stable
+    trigger: true
+  - task: run-tests
+    file: merrill-manifest-generator-stable/manifest-generator/ci/tasks/run-tests-stable.yml
+    on_failure:
+      do:
+      - put: slack-notification
+        params:
+          channel: {{slack-channel}}
+          username: {{slack-username}}
+          icon_emoji: ":robot_face:"
+          text: "@here stable version of manifest-generator seems to be broken"

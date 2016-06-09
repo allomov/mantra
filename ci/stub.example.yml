@@ -1,0 +1,6 @@
+slack-notification-url: "https://https://hooks.slack.com/services/XXXXXX/XXXXXX/ID"
+slack-channel: "#general"
+slack-username: "Merrill-Manifest-Generator-Bot"
+github-repo: git@github.com:pivotalservices/merrill.git
+git-repo-private-key: |
+  Your private key here

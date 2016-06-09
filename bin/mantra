@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
+require "mantra"
+
+if ARGV.empty?
+  puts Mantra::Command.usage
+  exit 0
+end
+
+command_type = ARGV.shift
+options = {type: command_type.to_sym, args: ARGV}
+
+command = Mantra::Command.create(options)
+
+command.run
+

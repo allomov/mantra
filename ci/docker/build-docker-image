@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+cp Dockerfile ../../../Dockerfile
+
+pushd ../../..
+  docker build -t allomov/ruby:manifest-generator .
+  docker push allomov/ruby:manifest-generator
+popd
+
+rm ../../../Dockerfile
