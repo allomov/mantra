@@ -66,6 +66,11 @@ transforms:
   target: workspace/stub.yml
   regex: "*cfdomain.com*"
   spiff-property: meta.domain
+- type: templatize-value
+  source: manifest.yml
+  target: workspace/stub.yml
+  value: "*cfdomain.com*"
+  spiff-property: meta.domain
 ```
 
 

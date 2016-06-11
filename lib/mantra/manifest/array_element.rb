@@ -27,6 +27,11 @@ module Mantra
         end.compact.flatten
       end
 
+      def each(path, &block)
+        elements = select(path)
+        elements.each(&block)
+      end
+
       def selector_for(element)
         self.content.index(element).to_s
       end

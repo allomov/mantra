@@ -1,0 +1,14 @@
+---
+domain: "example-domain.com"
+network_prefix: "192.168"
+
+mysql:
+  quad: "2"
+  instances: "2"
+rabbitmq:
+  quad: "3"
+  instances: "2"
+scs:
+  quad: "4"
+  instances: "2"
+

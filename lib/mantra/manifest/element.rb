@@ -6,6 +6,7 @@ module Mantra
       class UnknownScopeError  < Exception; end
 
       include Helpers::ObjectWithType
+      include Helpers::RegexpHelper
 
       attr_accessor :content, :parent
 
@@ -72,10 +73,6 @@ module Mantra
         raise "not implemented"
       end
 
-      def convert_to_regex(string)
-        Regexp.new(string.gsub("*", ".*"))
-      end
-
       def merge(element)
         raise "not implemented"
       end
@@ -123,6 +120,10 @@ module Mantra
 
       def select(selector)
         raise "not implemented"
+      end
+
+      def find(selector)
+        self.select(selector).first.content
       end
 
       def match_selector?(selector)

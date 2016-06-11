@@ -49,6 +49,8 @@ module Mantra
           self.class.type
         end
 
+        attr_accessor :options
+
         def initialize(options)
           @options = options
         end

@@ -29,7 +29,7 @@ module Mantra
   end
 end
 
-require "mantra/certificates/string_ext"
+# require "mantra/certificates/string_ext"
 require "mantra/certificates/cortege"
 require "mantra/certificates/group"
 # require "mantra/certificates"

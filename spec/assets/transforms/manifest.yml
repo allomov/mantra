@@ -1,0 +1,253 @@
+---
+# source: https://gist.githubusercontent.com/igm/3089176/raw/4f00ce50075273269b48e1f6c9148708548aea9b/cf-manifest.yml
+name: cf
+director_uuid: 5fc42e3c-3261-4b56-bba9-228b08963bd6
+
+release:
+  name: appcloud
+  version: 84
+
+compilation:
+  workers: 1
+  network: default
+  cloud_properties:
+    ram: 2048
+    disk: 8096
+    cpu: 4
+
+update:
+  canaries: 1
+  canary_watch_time: 90000
+  update_watch_time: 90000
+  max_in_flight: 1
+  max_errors: 1
+
+networks:
+- name: default
+  subnets:
+  - reserved:
+    - 192.168.3.2 - 192.168.3.9
+    - 192.168.3.245 - 192.168.3.254
+    static:
+    - 192.168.3.10 - 192.168.3.140
+    range: 192.168.3.0/24
+    gateway: 192.168.3.1
+    dns:
+    - 192.168.3.1
+    cloud_properties:
+      name: CFNet
+
+resource_pools:
+- name: infrastructure
+  network: default
+  size: 11
+  stemcell:
+    name: bosh-stemcell
+    version: 0.6.1
+  cloud_properties:
+    ram: 4096
+    disk: 8192
+    cpu: 2
+  env:
+    bosh:
+      password: $6$2f6qtRfO$oJOeKk/ZDNb7PWnvMiXDC/HstKiLiZCBHP32KHFVeM9rXgs4W/JJiI4a/eHoddhxJzorLYgi2JUQiOKxZko4M.
+      # c1oudc0w - password generated using mkpasswd -m sha-512
+- name: fake-infrastructure
+  network: default
+  size: 11
+  stemcell:
+    name: bosh-stemcell
+    version: 0.6.1
+  env:
+    bosh:
+      password: $6$2f6qtRfO$oJOeKk/dsfdsf/HstKiLiZCBHP32KHFVeM9rXgs4W/JJiI4a/eHoddhxJzorLYgi2JUQiOKxZko4M.
+      # changed c1oudc0w
+
+jobs:
+- name: nats
+  template: nats
+  instances: 1
+  resource_pool: infrastructure
+  networks:
+  - name: default
+    static_ips:
+    - 192.168.3.11
+
+
+- name: ccdb
+  template: postgres
+  instances: 1
+  resource_pool: infrastructure
+  persistent_disk: 8192
+  networks:
+  - name: default
+    static_ips:
+    - 192.168.3.13
+
+- name: stager
+  template: stager
+  instances: 1
+  resource_pool: infrastructure
+  networks:
+  - name: default
+
+- name: cloud_controller
+  template: cloud_controller
+  instances: 1
+  resource_pool: infrastructure
+  networks:
+  - name: default
+  properties:
+    cc:
+      srv_api_uri: http://api.example-domain.com
+      password: aaauuLaap44jadlas2l312lk
+      token: tttttttt
+      use_nginx: true
+      staging_upload_user: aaafhgjg
+      staging_upload_password: AAAfdase9
+      allow_registration: true
+      allow_debug: true
+      admins:
+      - my.email@vmware.com
+      nfs_server:
+        address: 192.168.3.10
+
+
+
+- name: debian_nfs_server
+  template: debian_nfs_server
+  instances: 1
+  resource_pool: infrastructure
+  persistent_disk: 8192
+  networks:
+  - name: default
+    static_ips:
+    - 192.168.3.10
+
+- name: uaa
+  template: uaa
+  instances: 1
+  resource_pool: infrastructure
+  persistent_disk: 8192
+  networks:
+  - name: default
+    static_ips:
+    - 192.168.3.10
+  properties:
+    login:
+      url: http://login.example-domain.com
+
+- name: health_manager
+  template: health_manager_next
+  instances: 1
+  resource_pool: infrastructure
+  networks:
+  - name: default
+    static_ips:
+    - 192.168.3.109
+
+- name: router_next
+  template: router_next
+  instances: 1
+  resource_pool: infrastructure
+  networks:
+  - name: default
+    static_ips:
+    - 192.168.3.100
+
+- name: dea
+  template: dea
+  instances: 1
+  resource_pool: infrastructure
+  networks:
+  - name: default
+
+
+- name: postgresql_node
+  template: postgresql_node
+  instances: 1
+  resource_pool: infrastructure
+  persistent_disk: 650
+  networks:
+  - name: default
+    static_ips:
+    - 192.168.3.70
+
+- name: postgresql_gateway
+  template: postgresql_gateway
+  instances: 1
+  resource_pool: infrastructure
+  networks:
+  - name: default
+
+- name: vcap_redis
+  template: vcap_redis
+  instances: 1
+  resource_pool: infrastructure
+  networks:
+  - name: default
+    static_ips:
+    - 192.168.3.16
+
+properties:
+  domain: example-domain.com
+
+  env: {}
+
+  networks:
+    apps: default
+    management: default
+
+  nats:
+    user: nats
+    password: aaa3ij3122
+    address: 192.168.3.11
+    port: 4222
+
+  db: ccdb
+
+  ccdb:
+    address: 192.168.3.13
+    port: 5524
+    pool_size: 10
+    databases:
+      - name: appcloud
+        tag: cc
+    roles:
+      - tag: admin
+        name: ccadmin
+        password: aaaBauWauZZb2
+
+  router: 
+    client_inactivity_timeout: 30 #https://github.com/cloudfoundry/cf-release/blob/master/jobs/cloud_controller/templates/nginx.conf.erb#L52
+
+  stager:
+    max_staging_duration: 120
+    max_active_tasks: 20
+    queues:
+    - staging
+
+
+
+  nfs_server:
+    address: 192.168.3.10
+    network: 192.168.3.0/24
+
+  health_manager_next: {}
+
+  dea:
+    max_memory: 4096
+
+  postgresql_gateway:
+    check_orphan_interval: 7200
+    token: aaaeAh4BXFBXwLrrWJCpQTfeDnaCn7m
+
+  postgresql_node:
+    production: true
+    db_size_overhead: 5.4
+
+  vcap_redis:
+    address: 192.168.3.16
+    port: 5454
+    password: aaaxbL98RWpwBuUJvKNojnpIcRb1ot2
+    maxmemory: 2000000000 # 2GB

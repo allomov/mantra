@@ -1,7 +1,7 @@
 module Mantra
-  class Transforms
+  class Transform
     class Extract < Transform
-      type :"extract"
+      type :extract
 
 
 

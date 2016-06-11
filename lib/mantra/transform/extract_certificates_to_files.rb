@@ -1,5 +1,5 @@
 module Mantra
-  class Transforms
+  class Transform
     class ExtractCertificatesToFiles < Transform
       type :"extract-certificates-to-files"
 

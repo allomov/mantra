@@ -1,5 +1,5 @@
 module Mantra
-  class Transforms
+  class Transform
     class ExtractSection < Transform
       type :"extract-section"
 

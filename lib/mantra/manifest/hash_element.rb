@@ -62,7 +62,7 @@ module Mantra
       def select(selector)
         return self if selector.empty?
         head_selector, tail_selector = split_selector(selector, /^([a-zA-Z0-9\_\-\=\*]*)\.?(.*)$/)
-        key_matcher = convert_to_regex(head_selector)
+        key_matcher = to_regexp(head_selector)
         self.content.each_pair.map do |pair|
           key, value = *pair
           value.select(tail_selector) if key.match(key_matcher)
@@ -72,8 +72,8 @@ module Mantra
       def match_selector?(selector)
         return true if selector.empty?
         key, value    = *selector.split("=")
-        key_matcher   = convert_to_regex(key)
-        value_matcher = convert_to_regex(value)
+        key_matcher   = to_regexp(key)
+        value_matcher = to_regexp(value)
         matched_element = self.content.each_pair.find do |pair|
           k, v = *pair
           (k.match(key_matcher) && v.leaf? && v.content.to_s.match(value_matcher))

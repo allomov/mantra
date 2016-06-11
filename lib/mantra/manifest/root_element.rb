@@ -29,7 +29,6 @@ module Mantra
         self.content.traverse(&block)
       end
 
-
     end
   end
 end
