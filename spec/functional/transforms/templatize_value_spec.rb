@@ -36,7 +36,7 @@ describe Mantra::Transform::TemplatizeValue do
           {"source" => "manifest.yml", "target" => "stub.yml", "value" => "domain.com", "scope" => "meta.scope"}
         end
         it "does not raise an error" do
-          expect { transform.run }.not_to raise_error Mantra::Transform::ValidationError
+          expect { transform.run }.not_to raise_error
         end
       end
     end

@@ -12,7 +12,6 @@ module Mantra
       def validate(value, name = nil)
         return if self.options[:validate].nil?
         Array(self.options[:validate]).each do |validate_verb|
-          # puts "validate_verb: #{validate_verb.inspect}, #{value.inspect}, #{name.inspect}"
           if self.respond_to?("validate_#{validate_verb}")
             self.send(:"validate_#{validate_verb}", value, name)
           else
@@ -54,14 +53,9 @@ module Mantra
     end
 
     def validate_inputs
-      puts "-" * 30
-      puts "validate_inputs: #{self.class.inputs.inspect}"
       self.class.inputs.each_pair do |name, input|
         input_value = self.options[name]
         input.validate_required(input_value, name) if input.required?
-        puts
-        puts "ITEM     \t'#{name}' : #{input.inspect}"
-        puts "OPTIONS  \t#{self.options.inspect}"
         input_value = self.options[name]
         input.validate(input_value, name)
       end

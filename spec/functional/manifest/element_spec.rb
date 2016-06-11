@@ -45,7 +45,7 @@ describe Mantra::Manifest::Element do
         {"azs"=>[{"name"=>"z1"}, {"name"=>"z2"}], "vm_types"=>[{"name"=>"name-1", "cloud_properties"=>{"instance_type"=>"Standard_A1"}}, {"name"=>"name-2", "cloud_properties"=>{"instance_type"=>"Standard_A2"}}, {"name"=>"name-4", "cloud_properties"=>{"instance_type"=>"Standard_A4"}}], "networks"=>[{"name"=>"floating", "type"=>"vip"}]}
       end
       it "merges elements with the same name and add elements that didn't exist" do
-        expect{ element1.merge(element2) }.not_to raise_error(Mantra::Manifest::Element::MergeConflictError)
+        expect{ element1.merge(element2) }.not_to raise_error
       end
     end
 
