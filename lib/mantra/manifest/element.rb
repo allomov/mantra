@@ -122,12 +122,41 @@ module Mantra
         raise "not implemented"
       end
 
+
       def find(selector)
         self.select(selector).first.content
       end
 
       def match_selector?(selector)
         selector.empty?
+      end
+
+      def path_exist?(path)
+        !self.select(path).empty?
+      end
+
+      def add_node(selector, value)
+        parts = selector.split(".")
+        existing_parts = []
+        while self.path_exist?(existing_path.join(".")) && !parts.empty?
+          existing_parts << parts.shift
+        end
+        parts_to_add = existing_parts.empty? ? parts : (parts + existing_parts.pop)
+        element_to_add = element_with_selector(parts_to_add.join("."), value)
+        self.select(existing_parts.join(".")).each do |element|
+          element.merge(element_to_add)
+        end
+      end
+
+      def self.element_with_selector(selector, value)
+        object_to_add = {}
+        parts = selector.split(".")
+        last_key = parts.pop
+        last_node = parts.inject(object_to_add) do |h, part|
+          h[part] = {}; h[part]
+        end
+        last_node[last_key] = value
+        Element.create(object_to_add)
       end
 
       def split_selector(selector, matcher_regex)

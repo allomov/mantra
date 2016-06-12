@@ -36,19 +36,14 @@ module Mantra
             end_index   = begin_index + match.size
             final_value = merge_tool.templatize(node.content.to_s, scope, begin_index, end_index)
             node.content = final_value
-            # target_manifest.add_node()
+            scope_element = Manifest::Element.element_with_selector(scope, value)
+            target_manifest.merge(scope_element)
           end
         end
 
         source_manifest.save
-
+        target_manifest.save
       end      
-
-
-
-
-
-
 
     end
   end

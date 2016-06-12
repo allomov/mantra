@@ -74,6 +74,14 @@ module Mantra
         end
       end
 
+      def add_node(selector, value)
+        # return self.content << Element.create(value).child if element_with_selector()
+        head_selector, tail_selector = split_selector(selector, /^\[([a-zA-Z0-9\_\-\=\*]*)\]\.?(.*)$/)
+        self.content.each do |element|
+          element.add_node(tail_selector, value) if element.match_selector?(head_selector)
+        end
+      end
+
     end
   end
 end

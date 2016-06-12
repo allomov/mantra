@@ -66,6 +66,7 @@ describe Mantra::Transform::TemplatizeValue do
         expect(domain).to eq("(( \"http://api.\" meta.domain ))")
         domain = source.find("jobs[name=uaa].properties.login.url")
         expect(domain).to eq("(( \"http://login.\" meta.domain ))")
+        expect(target.find(options["scope"])).to eq(options["value"])
       end
 
       it "(?) it fails if values in target file are different" do

@@ -27,6 +27,11 @@ module Mantra
         block.call(self)
       end
 
+      def add_node(selector, value)
+        raise UnknownScopeError.new("Can't add nodes to leaf")  unless selector.empty?
+        raise MergeConflictError.new("Leaf already exists with another value: #{self.content} != #{value}") unless self.content != value
+      end
+
     end
   end
 end

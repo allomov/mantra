@@ -69,6 +69,32 @@ module Mantra
         end.compact.flatten
       end
 
+      def add_node(selector, value)
+        head_selector, tail_selector = split_selector(selector, /^([a-zA-Z0-9\_\-\=\*]*)\.?(.*)$/)
+        if tail_selector.nil?
+          element_to_add = Element.create(value).child
+          self.content[head_selector] = element_to_add
+        elsif self.content[head_selector].nil?
+          object_to_add = {}
+          parts = tail_selector.split(".") # TODO: no arrays yet
+          first_key = parts.shift
+          last_key = parts.pop
+          last_node = parts.inject(object_to_add) { |h, part| h[part] = {}; h[part] }
+          if last_key.nil?
+            object_to_add = value
+          else
+            last_node[last_key] = value
+          end
+          self.content[first_key] = Element.create(object_to_add).child
+        else
+          key_matcher = to_regexp(head_selector)
+          self.content.each_pair.map do |pair|
+            key, value = *pair
+            value.add_node(tail_selector, value) if key.match(key_matcher)
+          end
+        end
+      end
+
       def match_selector?(selector)
         return true if selector.empty?
         key, value    = *selector.split("=")
