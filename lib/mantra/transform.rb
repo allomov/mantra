@@ -99,6 +99,7 @@ end
 
 require "mantra/transform/inputs/string"
 require "mantra/transform/inputs/hash"
+require "mantra/transform/inputs/array"
 require "mantra/transform/inputs/file"
 require "mantra/transform/inputs/folder"
 

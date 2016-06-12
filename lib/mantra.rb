@@ -1,6 +1,7 @@
 require "yaml"
 require "mantra/version"
 require "mantra/helpers/regexp_helper"
+require "mantra/helpers/template_helper"
 require "mantra/helpers/object_with_type"
 require "mantra/merge_tool"
 require "mantra/manifest"
