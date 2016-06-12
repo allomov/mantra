@@ -94,7 +94,7 @@ module Mantra
 
       class QuadSplitter
         include Mantra::Helpers::TemplateHelper
-        attr_accessor :start, :finish, :before, :after, :value, :parts
+        attr_accessor :values, :parts
         def initialize(ip_address, options)
           quads = ip_address.split(".")
           # [{"number" => 3,    "scope"  => "meta.networks.cf.quad"},
@@ -111,22 +111,27 @@ module Mantra
             end
             quad
           end
-          result = []
-          quads.each_with_index do |q, current_quad_index|
+          @parts = []
+          @values = quads_to_extract.inject({}) { |hash, quad| hash[quad["scope"]] = []; hash }
+          quads.each_with_index do |current_quad, current_quad_index|
             quad_to_extract = quads_to_extract.find do |quad|
               quad["range"].to_a.include?(current_quad_index)
             end
             if quad_to_extract.nil?
-              result << "." if result.last.is_a?(Scope)
-              result << q
-              result << "." if current_quad_index < 3
+              @parts << "." if @parts.last.is_a?(Scope)
+              @parts << current_quad
+              @parts << "." if current_quad_index < 3
             else
-              if result.last != quad_to_extract["scope"]
-                result << Scope.new(quad_to_extract["scope"])
+              @values[quad_to_extract["scope"]] << current_quad
+              if @parts.last != quad_to_extract["scope"]
+                @parts << Scope.new(quad_to_extract["scope"])
               end
             end
           end
-          @parts = result
+
+          @values.each_pair do |key, value|
+            @values[key] = value.join(".")
+          end
         end
         def parts(options={templatize: true})
           if options[:templatize]
