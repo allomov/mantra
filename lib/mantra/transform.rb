@@ -73,16 +73,32 @@ module Mantra
       File.open(path, "w+") { |file| file.write({}.to_yaml) }
     end
 
+    def raise_error_if_no_source_manifest
+      if self.source.nil? || !File.exist?(self.source)
+        raise Manifest::FileNotFoundError.new("Source manifest does not exist: #{self.source.inspect}")
+      end
+    end
+
     def merge_tool
       return @merge_tool unless @merge_tool.nil?
       merge_tool_type = self.options[:merge_tool] || :spiff
       @merge_tool = MergeTool.create(type: merge_tool_type)
     end
+    
+    def source_manifest
+      @source_manifest ||= Manifest.new(self.source)
+    end
+
+    def target_manifest
+      @target_manifest ||= Manifest.new(self.target)
+    end
+
 
   end
 end
 
 require "mantra/transform/inputs/string"
+require "mantra/transform/inputs/hash"
 require "mantra/transform/inputs/file"
 require "mantra/transform/inputs/folder"
 
@@ -90,3 +106,4 @@ require "mantra/transform/extract_section"
 require "mantra/transform/extract_certificates"
 require "mantra/transform/extract_certificates_to_files"
 require "mantra/transform/templatize_value"
+require "mantra/transform/templatize_ip_address"

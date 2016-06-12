@@ -1,7 +1,7 @@
 module Mantra
   class Transform
     class Input
-      class Folder < Input
+      class FolderInput < Input
         type :folder
       end
     end

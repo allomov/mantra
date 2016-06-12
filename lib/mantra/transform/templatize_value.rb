@@ -4,8 +4,7 @@ module Mantra
       type :"templatize-value"
       include Mantra::Helpers::RegexpHelper
 
-      description "Extracts certificates from source manifest, " +
-                  "templatize source manifest and places certificates to target manifest."
+      description "Extracts specified value to stub file"
 
       input "source", description: "Source manifest with ceritificates, that will become a template",
                       type:        :file,
@@ -21,10 +20,8 @@ module Mantra
                       type:        :string
 
       def perform
-        raise Manifest::FileNotFoundError.new("Source manifest does not exist: #{self.source.inspect}") if self.source.nil? || !File.exist?(self.source)
+        raise_error_if_no_source_manifest
         ensure_yml_file_exist(self.target)
-        source_manifest = Manifest.new(self.source)
-        target_manifest = Manifest.new(self.target)
         value_matcher   = to_regexp(value)
 
         raise "scope must not match value wildcard" if scope.match(value_matcher)
@@ -43,7 +40,13 @@ module Mantra
 
         source_manifest.save
         target_manifest.save
-      end      
+      end
+
+      def raise_if_no_source_manifest
+        if self.source.nil? || !File.exist?(self.source)
+          raise Manifest::FileNotFoundError.new("Source manifest does not exist: #{self.source.inspect}")
+        end
+      end
 
     end
   end
