@@ -16,10 +16,10 @@ describe Mantra::Transform::TemplatizeIpAddress do
       FileUtils.cp(assets_path("transforms", "stub.yml"), tmpdir)
       Dir.chdir(tmpdir)
     end
+
     describe "#tampletize" do
       it "works" do
-        Sc = Mantra::Transform::TemplatizeIpAddress::Scope
-        result = transform.tampletize(["192.168.", Sc.new("meta.net"), ".1", "-", "192.168.", Sc.new("meta.net"), ".10"])
+        result = transform.templatize(["192.168.", Scope.new("meta.net"), ".1", "-", "192.168.", Scope.new("meta.net"), ".10"])
         expect(result.join(" ")).to eq("\"192.168.\" meta.net \".1-192.168.\" meta.net \".10\"")
       end
     end
@@ -34,22 +34,23 @@ describe Mantra::Transform::TemplatizeIpAddress do
     #   end
     # end
 
-    # describe "sample test" do
-    #   let(:options) do
-    #     { "source" => "manifest.yml",
-    #       "target" => "stub.yml",
-    #       "quads" => [{"number" => 3,    "scope"  => "meta.networks.cf.quad"},
-    #                   {"range" => "1-2", "scope"  => "meta.networks.prefix"}]}
-    #   end
-    #   it "merges values that are already in target file" do
-    #     transform.run
-    #     domain = source.find("jobs[name=cloud_controller].properties.cc.srv_api_uri")
-    #     expect(domain).to eq("(( \"http://api.\" meta.domain ))")
-    #     domain = source.find("jobs[name=uaa].properties.login.url")
-    #     expect(domain).to eq("(( \"http://login.\" meta.domain ))")
-    #     expect(target.find(options["scope"])).to eq(options["value"])
-    #   end
-    # end
+    describe "sample test" do
+      let(:options) do
+        { "source" => "manifest.yml",
+          "target" => "stub.yml",
+          "quads" => [{"number" => 3,    "scope"  => "meta.networks.cf.quad"},
+                      {"range" => "1-2", "scope"  => "meta.networks.prefix"}]}
+      end
+      it "merges values that are already in target file" do
+        transform.run
+        ip_range_template = source.find("networks[name=default].subnets[0].reserved[0]")
+        expect(ip_range_template).to eq("(( meta.networks.prefix \".\" meta.networks.cf.quad \".2-\" meta.networks.prefix \".\" meta.networks.cf.quad \".9\" ))")
+        ip_range_template = source.find("networks[name=default].subnets[0].range")
+        expect(ip_range_template).to eq("(( meta.networks.prefix \".\" meta.networks.cf.quad \".0/24\" ))")
+        ip_address_template = source.find("jobs[name=nats].networks[0].static_ips[0]")
+        expect(ip_address_template).to eq("(( meta.networks.prefix \".\" meta.networks.cf.quad \".11\" ))")
+      end
+    end
 
 
   end

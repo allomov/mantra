@@ -1,7 +1,6 @@
 describe Mantra::Transform::TemplatizeIpAddress::QuadSplitter do
   subject { Mantra::Transform::TemplatizeIpAddress::QuadSplitter }
-  let(:quad) { subject.new(value, options) }
-  let(:options) { {"quads" => quads} }
+  let(:quad) { subject.new(value, quads) }
   let(:value)   { "192.168.0.1" }
   describe "number option" do
     let(:quads) { [{"number" => 3, "scope" => "meta.quad"}] }
@@ -27,7 +26,7 @@ describe Mantra::Transform::TemplatizeIpAddress::QuadSplitter do
     ]}
     it "extracts value" do
       result = quad.parts(templatize: true).join(" ")
-      expect(result).to eq("meta.range.quad meta.quad \".1\"")
+      expect(result).to eq("meta.range.quad \".\" meta.quad \".1\"")
       expect(quad.values["meta.quad"]).to eq("0")
       expect(quad.values["meta.range.quad"]).to eq("192.168")
     end

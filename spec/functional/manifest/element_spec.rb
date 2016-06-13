@@ -119,6 +119,12 @@ describe Mantra::Manifest::Element do
         expect(result.size).to eq 1
         expect(result.map { |r| r.content }).to eq %w(element1)
       end
+      it "[2].name returns element1" do
+        result = element1.select("[1].name")
+        expect(result).to be_a(Array)
+        expect(result.size).to eq(1)
+        expect(result.map { |r| r.content }).to eq %w(element2)
+      end
     end
 
     describe "hash and array" do

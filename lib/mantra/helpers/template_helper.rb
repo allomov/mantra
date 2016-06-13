@@ -1,3 +1,6 @@
+class Scope < String
+end
+
 module Mantra
   module Helpers
     module TemplateHelper

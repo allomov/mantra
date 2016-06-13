@@ -1,6 +1,3 @@
-class Scope < String
-end
-
 module Mantra
   class Transform
     class TemplatizeIpAddress < Transform
@@ -29,33 +26,33 @@ module Mantra
         ensure_yml_file_exist(self.target)
 
         source_manifest.traverse do |node|
-          # template, values = if is_ip_address?(node.content)
-          #   quad = QuadSplitter.new(node.content, quad)
-          #   "(( #{templatize(quad.parts)} ))", quad.value
-          # elsif is_network?(node.content)
-          #   # node.content
-          #   ip_address, network_prefix_size = *node.content.split("/")
-          #   quad = QuadSplitter.new(ip_address, quad)
-          #   quad.parts(templatize: false).push("/#{network_prefix_size}")
-          #   "(( #{templatize(quad.parts).join(" ")} ))", quad.values
-          # elsif is_ip_range?(node.content)
-          #   ip_address1, ip_address2 = *node.content.split("-").map { |ip| ip.strip }
-          #   quad1 = QuadSplitter.new(ip_address1, quad)
-          #   quad2 = QuadSplitter.new(ip_address2, quad)
-          #   (quad1.parts + quad2.parts).join(" ")
-          #   if quad1.values != quad2.values
-          #     raise ValidationError.new("quad values should be equal in range #{node.content}")
-          #   end
-          #   connector = [quad1.after, "-", quad2.before].select { |s| !s.empty? }.join("")
-          #   template_elements = [quad1.before, Scope.new(scope), connector,
-          #                        Scope.new(scope), quad2.after]
-          #   "(( #{templatize(template_elements)} ))", quad1.value
-          # end
-          # unless template.nil?
-          #   node.content = Element.create(template)
-          #   scope_element = Manifest::Element.element_with_selector(scope, value)
-          #   target_manifest.merge(scope_element)
-          # end
+          template, values = if is_ip_address?(node.content)
+            splitter = QuadSplitter.new(node.content, quads)
+            ["(( #{splitter.parts(templatize: true).join(" ")} ))", splitter.values]
+          elsif is_network_range?(node.content)
+            ip_address, network_prefix_size = *node.content.split("/")
+            puts "NETWORK RANGE! #{[ip_address, network_prefix_size].inspect}"
+            splitter = QuadSplitter.new(ip_address, quads)
+            network_range_parts = splitter.parts + ["/#{network_prefix_size}"]
+            # puts "PARTS! #{network_range_parts.inspect}"
+            resulting_template = "(( #{templatize(network_range_parts).join(" ")} ))"
+            [resulting_template, splitter.values]
+          elsif is_ip_range?(node.content)
+            ip_address1, ip_address2 = *node.content.split("-").map { |ip| ip.strip }
+            splitter1 = QuadSplitter.new(ip_address1, quads)
+            splitter2 = QuadSplitter.new(ip_address2, quads)
+            result = templatize(splitter1.parts + ["-"] + splitter2.parts)
+            ["(( #{result.join(" ")} ))", splitter1.values]
+          end
+          unless template.nil?
+            puts template.inspect if node.content == "192.168.3.0/24"
+            raise UnknownScopeError.new("Can't templatize non leaf ip address") unless node.leaf?
+            node.content = template
+            values.each_pair do |scope, value|
+              scope_element = Manifest::Element.element_with_selector(scope, value)
+              target_manifest.merge(scope_element)
+            end
+          end
         end
 
         source_manifest.save
@@ -66,16 +63,16 @@ module Mantra
         "(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})"
       end
 
-      def is_network?(value)
-        !!value.to_s.match(/^#{ip_address_matcher}\s*-\s*#{ip_address_matcher}\/\d{1,2}$/)
+      def is_network_range?(value)
+        !!value.to_s.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\/\d{1,2}$/)
       end
 
       def is_ip_range?(value)
-        !!value.to_s.match(/^#{ip_address_matcher}\s*-\s*#{ip_address_matcher}$/)
+        !!value.to_s.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\s*-\s*(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/)
       end
 
       def is_ip_address?(value)
-        !!value.to_s.match(/^#{ip_address_matcher}$/)
+        !!value.to_s.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/)
       end
 
       def templatize(parts)
@@ -95,19 +92,17 @@ module Mantra
       class QuadSplitter
         include Mantra::Helpers::TemplateHelper
         attr_accessor :values, :parts
-        def initialize(ip_address, options)
+        def initialize(ip_address, template_quads)
           quads = ip_address.split(".")
-          # [{"number" => 3,    "scope"  => "meta.networks.cf.quad"},
-          #  {"range" => "1-2", "scope"  => "meta.networks.prefix"}]
-          quads_to_extract = options["quads"].map do |quad|
+          quads_to_extract = template_quads.map do |quad|
             if quad["number"]
               index = quad["number"].to_i - 1
-              quad["range"] = (index..index)
+              quad["range_object"] = (index..index)
             elsif quad["range"]
               index1, index2 = *quad["range"].split("-").map do |v|
                 v.strip.to_i - 1
               end
-              quad["range"] = (index1..index2)
+              quad["range_object"] = (index1..index2)
             end
             quad
           end
@@ -115,7 +110,7 @@ module Mantra
           @values = quads_to_extract.inject({}) { |hash, quad| hash[quad["scope"]] = []; hash }
           quads.each_with_index do |current_quad, current_quad_index|
             quad_to_extract = quads_to_extract.find do |quad|
-              quad["range"].to_a.include?(current_quad_index)
+              quad["range_object"].to_a.include?(current_quad_index)
             end
             if quad_to_extract.nil?
               @parts << "." if @parts.last.is_a?(Scope)
@@ -124,6 +119,7 @@ module Mantra
             else
               @values[quad_to_extract["scope"]] << current_quad
               if @parts.last != quad_to_extract["scope"]
+                @parts << "." if @parts.last.is_a?(Scope)
                 @parts << Scope.new(quad_to_extract["scope"])
               end
             end
@@ -133,7 +129,7 @@ module Mantra
             @values[key] = value.join(".")
           end
         end
-        def parts(options={templatize: true})
+        def parts(options={templatize: false})
           if options[:templatize]
             templatize(@parts)
           else

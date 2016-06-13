@@ -22,9 +22,14 @@ module Mantra
       def select(selector)
         return self if selector.empty?
         head_selector, tail_selector = split_selector(selector, /^\[([a-zA-Z0-9\_\-\=\*]*)\]\.?(.*)$/)
-        self.content.map do |element|
-          element.select(tail_selector) if element.match_selector?(head_selector)
-        end.compact.flatten
+        if head_selector.match(/^\d+/)
+          raise UnknownScopeError.new("out of range") if head_selector.to_i >= self.content.size 
+          Array(self.content[head_selector.to_i].select(tail_selector))
+        else
+          self.content.map do |element|
+            element.select(tail_selector) if element.match_selector?(head_selector)
+          end.compact.flatten
+        end
       end
 
       def each(path, &block)
