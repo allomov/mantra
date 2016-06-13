@@ -19,8 +19,8 @@ module Mantra
       end
 
       def select(selector)
-        raise UnknownScopeError.new("leaf can't handle selector") unless selector.empty?
-        self
+        # raise UnknownScopeError.new("leaf can't handle selector") unless selector.empty?
+        selector.empty? ? self : nil
       end
 
       def traverse(&block)

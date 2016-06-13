@@ -45,7 +45,7 @@ transforms:
 - type: extract-section
   section: jobs
   source: manifest.yml
-  target: workspace/properties.yml  
+  target: workspace/jobs.yml  
 - type: extract-certificates
   source: workspace/properties.yml
   target: workspace/secrets.yml
@@ -71,6 +71,9 @@ transforms:
   target: workspace/stub.yml
   value: "*cfdomain.com*"
   spiff-property: meta.domain
+```
+
+```
 ```
 
 

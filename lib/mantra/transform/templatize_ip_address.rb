@@ -14,12 +14,8 @@ module Mantra
       input "target", description: "Target manifest with extracted ceritificates",
         type:        :file
 
-      # input "value",  description: "value you want to templatize (wildcard is available, i.e. '*.domain.com')",
-      #                 type:        :string
-
       input "quads",   description: "quad that is going to be extracted",
         type:        :array
-
 
       def perform
         raise_error_if_no_source_manifest
@@ -93,42 +89,38 @@ module Mantra
         include Mantra::Helpers::TemplateHelper
         attr_accessor :values, :parts
         def initialize(ip_address, template_quads)
-          quads = ip_address.split(".")
-          quads_to_extract = template_quads.map do |quad|
-            if quad["number"]
+          
+          extract_options = template_quads.map do |quad|
+            quad["range_object"] = if quad["number"]
               index = quad["number"].to_i - 1
-              quad["range_object"] = (index..index)
+              (index..index)
             elsif quad["range"]
-              index1, index2 = *quad["range"].split("-").map do |v|
-                v.strip.to_i - 1
-              end
-              quad["range_object"] = (index1..index2)
+              index1, index2 = *quad["range"].split("-").map { |v| v.strip.to_i - 1 }
+              (index1..index2)
             end
             quad
           end
-          @parts = []
-          @values = quads_to_extract.inject({}) { |hash, quad| hash[quad["scope"]] = []; hash }
-          quads.each_with_index do |current_quad, current_quad_index|
-            quad_to_extract = quads_to_extract.find do |quad|
-              quad["range_object"].to_a.include?(current_quad_index)
-            end
-            if quad_to_extract.nil?
-              @parts << "." if @parts.last.is_a?(Scope)
-              @parts << current_quad
-              @parts << "." if current_quad_index < 3
-            else
-              @values[quad_to_extract["scope"]] << current_quad
-              if @parts.last != quad_to_extract["scope"]
-                @parts << "." if @parts.last.is_a?(Scope)
-                @parts << Scope.new(quad_to_extract["scope"])
+
+          template = IpAddressTemplate.new(ip_address)
+
+          extract_options.each do |option|
+            template.replace_with_scope(option["range_object"], option["scope"])
+          end
+
+          result = template.parts.map do |p|
+            if p.is_scope?
+              current_scope = extract_options.find { |option| option["scope"] == p.scope }
+              if current_scope["with_value"] == p.value
+                p
+              else
+                IpAddressTemplate::Value.new(p.value)
               end
             end
           end
 
-          @values.each_pair do |key, value|
-            @values[key] = value.join(".")
-          end
+          @parts = result
         end
+
         def parts(options={templatize: false})
           if options[:templatize]
             templatize(@parts)

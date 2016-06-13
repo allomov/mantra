@@ -21,6 +21,7 @@ module Mantra
 
       def select(selector)
         return self if selector.empty?
+        return nil  if !array_selector?(selector)
         head_selector, tail_selector = split_selector(selector, /^\[([a-zA-Z0-9\_\-\=\*]*)\]\.?(.*)$/)
         if head_selector.match(/^\d+/)
           raise UnknownScopeError.new("out of range") if head_selector.to_i >= self.content.size 

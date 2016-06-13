@@ -162,9 +162,18 @@ module Mantra
       def split_selector(selector, matcher_regex)
         matcher = selector.match(matcher_regex)
         raise UnknownScopeError.new("Unknown selector: #{selector}") if matcher.nil?
+        # return nil, nil if matcher.nil?
         head_selector = matcher[1]
         tail_selector = matcher[2]
         return head_selector, tail_selector
+      end
+
+      def array_selector?(selector)
+        !!selector.match(/\[(.+\=.+|\d+)?\].*/)
+      end
+
+      def hash_selector?(selector)
+        !!selector.match(/[a-z0-9]+/)
       end
 
     end

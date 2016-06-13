@@ -60,6 +60,7 @@ module Mantra
       end
 
       def select(selector)
+        # return 
         return self if selector.empty?
         head_selector, tail_selector = split_selector(selector, /^([a-zA-Z0-9\_\-\=\*]*)\.?(.*)$/)
         key_matcher = to_regexp(head_selector)

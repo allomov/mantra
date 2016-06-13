@@ -16,8 +16,13 @@ module Mantra
     def self.option(name, long_option, short_option, description)
       self.option_descriptors << [name, long_option, short_option, description]
       self.send(:define_method, name) do
-        self.options[name]
+        @options[name.to_s]
       end
+    end
+
+    def run
+      parse_options
+      perform
     end
 
     def initialize(options)
@@ -26,7 +31,7 @@ module Mantra
 
     attr_accessor :options
     def parse_options
-      @options = []
+      @options = {}
       OptionParser.new do |options_parser|
         options_parser.banner = "Usage: mantra #{} [options]"
         self.class.option_descriptors.each do |option|

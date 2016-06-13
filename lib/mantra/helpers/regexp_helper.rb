@@ -3,7 +3,7 @@ module Mantra
     module RegexpHelper
 
       def to_regexp(string)
-        Regexp.new(string.gsub("*", ".*"))
+        Regexp.new("^#{string.gsub("*", ".*")}$")
       end
 
     end

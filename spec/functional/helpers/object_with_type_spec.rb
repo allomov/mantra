@@ -11,7 +11,7 @@ describe Mantra::Helpers::ObjectWithType do
     end
   end
   let(:object) do
-  	superclass.create(type: :test)
+    superclass.create(type: :test)
   end
 
   it "saves all subclasses" do
