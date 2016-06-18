@@ -14,13 +14,15 @@ module Mantra
       def perform
         m = Manifest.new(manifest)
         results = m.select(scope)
+
         results = results.map do |element|
           element.parent
         end if with_parent
+
         results = results.map do |element|
           element.to_ruby_object
         end
-        puts format
+
         case format
         when "yaml", "yml", "y", nil
           puts results.to_yaml
