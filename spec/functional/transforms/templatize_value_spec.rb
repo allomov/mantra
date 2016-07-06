@@ -63,10 +63,14 @@ describe Mantra::Transform::TemplatizeValue do
       it "merges values that are already in target file" do
         transform.run
         domain = source.find("jobs[name=cloud_controller].properties.cc.srv_api_uri")
-        expect(domain).to eq("(( \"http://api.\" meta.domain ))")
+        expect(domain).to be_leaf
+        expect(domain.to_ruby_object).to eq("(( \"http://api.\" meta.domain ))")
         domain = source.find("jobs[name=uaa].properties.login.url")
-        expect(domain).to eq("(( \"http://login.\" meta.domain ))")
-        expect(target.find(options["scope"])).to eq(options["value"])
+        expect(domain).to be_leaf
+        expect(domain.to_ruby_object).to eq("(( \"http://login.\" meta.domain ))")
+        domain_value_node = target.find(options["scope"])
+        expect(domain_value_node).to be_leaf
+        expect(domain_value_node.to_ruby_object).to eq(options["value"])
       end
 
       it "(?) it fails if values in target file are different" do

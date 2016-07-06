@@ -2,6 +2,7 @@ module Mantra
   class Transform
     class TemplatizeValue < Transform
       type :"templatize-value"
+
       include Mantra::Helpers::RegexpHelper
 
       description "Extracts specified value to stub file"
@@ -13,14 +14,19 @@ module Mantra
       input "target", description: "Target manifest with extracted ceritificates",
                       type:        :file
 
-      input "value",  description: "value you want to templatize (wildcard available, for instance 'domain.com')",
+      input "value",  description: "value you want to templatize (for instance 'domain.com')",
                       type:        :string
 
-      input "scope",  description: "scope of element",
+      input "scope",  description: "scope (or path) in stub file that will have current value (for instance meta.networks)",
                       type:        :string
 
-      input "regexp", description: "value will be templatized only if it is satisfied to this regexp (for instance)",
-                      type:        :string
+      input "in",     description: "wildcard matcher (for instance 'https://*.domain.com')",
+                      type:        :string,
+                      optional:    true
+
+      input "regexp", description: "string with ruby regexp to match values",
+                      type:        :string,
+                      optional:    true
 
       def perform
         raise_error_if_no_source_manifest
