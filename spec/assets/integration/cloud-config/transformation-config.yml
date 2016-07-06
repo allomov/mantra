@@ -1,0 +1,30 @@
+global:
+  source: manifest.yml
+  target: cloud-config.yml
+
+transforms:
+- type: filter
+  sections: ["networks", "compilation", "update", "resource_pools", "disk_pools"]
+- type: rename
+  section: "resource_pools"
+  to: "vm_types"
+- type: rename
+  section: "disk_pools"
+  to: "disk_types"
+- type: add
+  section:
+    az: z1
+  to: "networks[].subnets[]"
+- type: add
+  section:
+    az: z1
+  to: "update"
+- type: add
+  section:
+    az: z1
+  to: "compilation"
+- type: add
+  section:
+    azs:
+    - name: z1
+  to: "azs"

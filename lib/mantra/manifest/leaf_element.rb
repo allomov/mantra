@@ -32,6 +32,10 @@ module Mantra
         raise MergeConflictError.new("Leaf already exists with another value: #{self.content} != #{value}") unless self.content != value
       end
 
+      def children
+        []
+      end
+
     end
   end
 end

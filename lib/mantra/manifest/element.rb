@@ -25,12 +25,35 @@ module Mantra
         self.parent  = parent
       end
 
+      # manifest.fetch("jobs[name=c*].properties.cf")
+      # manifest.fetch("jobs[1].properties.cf")
+      # jobs[]
+
+      # this method mimics ruby Hash#fetch method
+      def fetch(scope, &block)
+        current_scope = Scope.parse(scope)
+        element = self.root? ? self.content : self
+        current_scope.filter(element)
+      end
+
+      def children
+        raise "not implemented"
+      end
+
       def content=(content)
         raise "#content=() method is not implemented"
       end
 
       def name
         raise "unknown name"
+      end
+
+      def find_children_by_scope(scope)
+        raise "not implemented"
+      end
+
+      def find(string_scope)
+        raise "not implemented"
       end
 
       def has_name?
@@ -123,9 +146,9 @@ module Mantra
       end
 
 
-      def find(selector)
-        self.select(selector).first.content
-      end
+      # def find(selector)
+      #   self.select(selector).first.content
+      # end
 
       def match_selector?(selector)
         selector.empty?

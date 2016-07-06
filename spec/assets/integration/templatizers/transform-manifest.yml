@@ -1,0 +1,60 @@
+global:
+  source: manifest.yml
+  target: workspace/jobs.yml
+
+transforms:
+- type: extract-section
+  section: jobs[name=uaa].properties
+  scope: meta.properties
+  target: workspace/secrets.yml
+
+- type: extract-section
+  section: jobs
+  source: manifest.yml
+  target: workspace/jobs.yml
+- type: extract-certificates
+  source: workspace/properties.yml
+  target: workspace/secrets.yml
+- type: extract-certificates-to-files
+  source: workspace/secrets.yml
+  target: workspace/secrets
+- type: extract
+  source: manifest.yml
+  section: jobs
+- type: extract
+  source: manifest.yml
+  section: resource_pools
+- type: extract
+  source: manifest.yml
+  section: resource_pools
+- type: extract-spiff-option
+  source: manifest.yml
+  target: workspace/stub.yml
+  regex: "*cfdomain.com*"
+  spiff-property: meta.domain
+- type: templatize-value
+  source: manifest.yml
+  target: workspace/stub.yml
+  value: "cfdomain.com"
+  regexp: "^.*\.cfdomain\.com$"
+  scope: meta.domain
+- type: templatize-ip-address
+  source: manifest.yml
+  target: stub.yml
+  quads:
+    # 192.168.2.11
+    # (( meta.network.cf.prefix "." meta.network.cf.quad ".11" ))
+    # 192.168.2.0/24
+    # (( meta.network.cf.prefix "." meta.network.cf.quad ".0/24" ))
+    # 192.168.2.0/22
+    # 192.168.2.11-192.168.3.25
+
+    - { range:  "1-2", scope: "meta.network.cf.prefix" }
+    - { number: "3",   scope: "meta.network.cf.quad1", with_value: "2" }
+    - { number: "3",   scope: "meta.network.cf.quad2", with_value: "3" }
+
+- type: templatize-value
+  source: manifest.yml
+  target: workspace/stub.yml
+  value: "*cfdomain.com*"
+  spiff-property: meta.domain

@@ -13,16 +13,19 @@ module Mantra
       input "target", description: "Target manifest with extracted ceritificates",
                       type:        :file
 
-      input "value",  description: "value you want to templatize (wildcard is available, i.e. '*.domain.com')",
+      input "value",  description: "value you want to templatize (wildcard available, for instance 'domain.com')",
                       type:        :string
 
       input "scope",  description: "scope of element",
                       type:        :string
 
+      input "regexp", description: "value will be templatized only if it is satisfied to this regexp (for instance)",
+                      type:        :string
+
       def perform
         raise_error_if_no_source_manifest
         ensure_yml_file_exist(self.target)
-        # value_matcher   = to_regexp(value)
+        # value_matcher = to_regexp(value)
 
         raise "scope must not match value wildcard" if scope.match(value)
 

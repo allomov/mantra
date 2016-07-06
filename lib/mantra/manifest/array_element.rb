@@ -19,6 +19,19 @@ module Mantra
         self
       end
 
+      def find_children_by_scope(scope)
+        return [] unless scope.array?
+        self.content.map do |element|
+          if scope.match?(element)
+            if scope.has_next?
+              element.find_children_by_scope(scope.next)
+            else
+              element
+            end
+          end
+        end.flatten.compact
+      end
+
       def select(selector)
         return self if selector.empty?
         return nil  if !array_selector?(selector)
@@ -56,6 +69,10 @@ module Mantra
             elements.delete(element_with_the_same_value)
           end
         end
+      end
+
+      def children
+        self.content
       end
 
       def merge_by_name(elements)

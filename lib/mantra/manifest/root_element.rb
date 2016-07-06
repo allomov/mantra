@@ -33,6 +33,10 @@ module Mantra
         self.content
       end
 
+      def children
+        self.content
+      end
+
       def add_node(selector, value)
         # value_element = Element.create(value).child
         self.child.add_node(selector, value)
@@ -48,6 +52,15 @@ module Mantra
         #   last_node[last_key] = value
         # end
         # latest_existing_node[first_key] = object_to_add
+      end
+
+      def find_children_by_scope(scope)
+        self.content.find_children_by_scope(scope)
+      end
+
+      def find(string_scope)
+        scope = Scope.parse(string_scope)
+        self.find_children_by_scope(scope)
       end
 
     end

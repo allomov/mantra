@@ -29,9 +29,8 @@ networks:
     - 192.168.3.2 - 192.168.3.9
     - 192.168.3.245 - 192.168.3.254
     static:
-    - 192.168.3.10 - 192.168.4.140
-    - (( networks.cf.prefix "." networks.cf.quad1 ".10" -  networks.default.prefix "." networks.cf.quad2 ".140" ))
-    range: 192.168.3.0/22
+    - 192.168.3.10 - 192.168.3.140
+    range: 192.168.3.0/24
     gateway: 192.168.3.1
     dns:
     - 192.168.3.1
@@ -39,7 +38,7 @@ networks:
       name: CFNet
 
 resource_pools:
-- name: infrastructure
+- name: resource-pool-1
   network: default
   size: 11
   stemcell:
@@ -53,7 +52,7 @@ resource_pools:
     bosh:
       password: $6$2f6qtRfO$oJOeKk/ZDNb7PWnvMiXDC/HstKiLiZCBHP32KHFVeM9rXgs4W/JJiI4a/eHoddhxJzorLYgi2JUQiOKxZko4M.
       # c1oudc0w - password generated using mkpasswd -m sha-512
-- name: fake-infrastructure
+- name: resource-pool-2
   network: default
   size: 11
   stemcell:
@@ -84,6 +83,8 @@ jobs:
   - name: default
     static_ips:
     - 192.168.3.13
+  properties:
+    job_name_starts_with_c: true
 
 - name: stager
   template: stager
@@ -99,6 +100,7 @@ jobs:
   networks:
   - name: default
   properties:
+    job_name_starts_with_c: true
     cc:
       srv_api_uri: http://api.example-domain.com
       password: aaauuLaap44jadlas2l312lk

@@ -5,8 +5,27 @@ describe Mantra::Transform::TemplatizeIpAddress do
   let(:source)    { Mantra::Manifest.new(options["source"]) }
   let(:target)    { Mantra::Manifest.new(options["target"]) }
   let(:options) do
-    {"source" => "manifest.yml", "target" => "stub.yml", "quads" => [{ "number" => 3, "scope" => "meta.quad" }]}
+    {
+      "source" => "manifest.yml",
+      "target" => "stub.yml",
+      "quads" => [
+        { "number" => 3, "scope" => "meta.quad" }
+      ]
+    }
   end
+
+  # let(:options) do
+  #   {
+  #     "source" => "manifest.yml",
+  #     "target" => "stub.yml",
+  #     "quads" => [
+  #       { "range"  => "1-2", "scope" => "meta.network.prefix" }
+  #       { "number" => "3",   "scope" => "meta.quad1", "with_value" => "2" }
+  #       { "number" => "3",   "scope" => "meta.quad2", "with_value" => "3" }
+  #     ]
+  #   }
+  # end
+
 
   describe "#run" do
 
@@ -38,8 +57,9 @@ describe Mantra::Transform::TemplatizeIpAddress do
       let(:options) do
         { "source" => "manifest.yml",
           "target" => "stub.yml",
-          "quads" => [{"number" => 3,    "scope"  => "meta.networks.cf.quad"},
-                      {"range" => "1-2", "scope"  => "meta.networks.prefix"}]}
+          "quads" => [{"range" => "1-2", "scope"  => "meta.networks.cf.prefix", "with_value" => "192.168"},
+                      {"number" => "3", "scope"  => "meta.networks.cf.quad1", "with_value" => "2"},
+                      {"number" => "3", "scope"  => "meta.networks.cf.quad2", "with_value" => "3"}]}
       end
       it "merges values that are already in target file" do
         transform.run

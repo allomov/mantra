@@ -1,4 +1,5 @@
 require "forwardable"
+require "mantra/manifest/scope"
 require "mantra/manifest/element"
 require "mantra/manifest/root_element"
 require "mantra/manifest/array_element"
@@ -15,7 +16,8 @@ module Mantra
 
     attr_accessor :root, :file
 
-    def_delegators :@root, :merge, :to_ruby_object, :traverse, :select, :find, :add_node
+    def_delegators :@root, :merge, :to_ruby_object, :traverse,
+                           :select, :find, :add_node, :fetch
 
     def initialize(manifest_object_or_path)
       if manifest_object_or_path.is_a?(String) && File.exist?(manifest_object_or_path)
@@ -25,7 +27,8 @@ module Mantra
       elsif manifest_object_or_path.is_a?(Hash) || manifest_object_or_path.is_a?(Array)
         self.root = Element.create(manifest_object_or_path)
       else
-        raise "Don't know how initialize manifest. Expected existing file path or hash, got #{manifest_object_or_path.class.inspect}: #{manifest_object_or_path.inspect}"
+        raise "Don't know how initialize manifest. Expected existing file path or hash, " +
+              "got #{manifest_object_or_path.class.inspect}: #{manifest_object_or_path.inspect}"
       end
     end
 

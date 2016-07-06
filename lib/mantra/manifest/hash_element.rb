@@ -35,6 +35,10 @@ module Mantra
         self.content.has_key?("name")
       end
 
+      def children
+        self.content.values
+      end
+
       def name
         raise "name should be a value, not node" if !self.content["name"].leaf?
         self.content["name"].content || raise("no name for #{self.inspect}")
@@ -61,7 +65,9 @@ module Mantra
 
       def select(selector)
         # return 
+        # return nil if selector.nil?
         return self if selector.empty?
+        return nil  if !hash_selector?(selector)
         head_selector, tail_selector = split_selector(selector, /^([a-zA-Z0-9\_\-\=\*]*)\.?(.*)$/)
         key_matcher = to_regexp(head_selector)
         self.content.each_pair.map do |pair|
@@ -112,6 +118,20 @@ module Mantra
         self.content.each_value do |value|
           value.traverse(&block)
         end
+      end
+
+      def find_children_by_scope(scope)
+        return [] unless scope.hash?
+        self.content.each_pair.map do |pair|
+          key, value = *pair
+          if scope.match?(key, value)
+            if scope.has_next?
+              element.find_children_by_scope(scope.next)
+            else
+              element
+            end
+          end
+        end.flatten.compact
       end
 
     end

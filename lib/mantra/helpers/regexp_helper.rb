@@ -3,8 +3,8 @@ module Mantra
     module RegexpHelper
 
       def to_regexp(string)
-        # TODO: escape all symbols except *
-        Regexp.new("^#{string.gsub("*", ".*")}$")
+        escaped_string = Regexp.escape(string)
+        Regexp.new("^#{escaped_string.gsub("\\*", ".+")}$")
       end
 
     end
