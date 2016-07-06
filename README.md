@@ -1,18 +1,52 @@
-# Mantra
+# Mantra - मंत्र
 
 [![Build Status](https://travis-ci.org/allomov/mantra.svg?branch=master)](https://travis-ci.org/allomov/mantra)
 
-```
-mantra find jobs[name=consul].properties manifest.yml
-# mantra f
-```
+### Description
+
+Mantra (/ˈmæntrə/, abr. Manifest Transformation) is a tool to ease work with manifests.
+
+It allows to do following:
+
+* find manifest parts 
+* extract cloud config from you BOSH v1 manifest
+* convert your manifest into spiff templates with
+  * extracted passwords
+  * extracted certificates to different files
+  * templatized network configuration
+  * extracted or changed properties
+* and much more
+
+Mantra is tend to be an easily extendable tool, so you can add new commands and transforms.
+
+### Concepts
+
+While some actions performed on manifest can be automated, anther require special configuration and extra knowledges about source manifes. Here is a small glossery that I use:
+
+`Transformation Manifest` - config file that describes how your manifest should be udpated
+`Source Manifest` - your source BOSH manifest, if you run templatizers on source manifest they can change it.
+`Target Manifest` - manifest that will contain extracted template properties, to restore source manifest you'll need to run merge tool with resulting source manifest.
+`Transform` - a ruby class that declares how specific transformation should be done.
+
+### Examples
+
+Find and output in json some manifest parts:
 
 ```
-mantra transform transformation-manifest.yml manifest.yml
+mantra find jobs[name=consul].properties -m manifest.yml -f json
+# alias: mantra f
+```
+
+Transform BOSH v1 manifest to extract cloud config:
+
+```
+mantra transform -c transformation-manifest.yml -m manifest.yml
 # mantra t
 ```
 
-```
+Here is an example of `transformation-manifest.yml`:
+
+```yaml
 transforms:
 - type: filter
   sections: ["networks", "compilation", "update", "resource_pools", "disk_pools"]
@@ -81,33 +115,15 @@ transforms:
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Install it as a gem:
 
-```ruby
-gem 'mantra'
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
     $ gem install mantra
-
-## Usage
-
-TODO: Write usage instructions here
+```
 
 ## Dependencies
 
 `openssl`!
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 

@@ -85,24 +85,5 @@ describe Mantra::Transform::TemplatizeValue do
 
     end
 
-    describe "test ip address range" do
-      let(:options) do
-        { "source" => "manifest.yml",
-          "target" => "stub.yml",
-          "value"  => "domain.com",
-          "as"     => {"quad": 3},
-          "scope"  => "meta.domain" }
-      end
-      # it "merges values that are already in target file" do
-        
-      # end
-      # it "(?) it fails if values in target file are different" do
-
-      # end
-      # it "spiff can restore source manifest from manifest resulting source manifest and target file" do
-
-      # end
-    end
-
   end
 end
