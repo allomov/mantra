@@ -33,15 +33,6 @@ module Mantra
         self.content
       end
 
-      def find_children_by_scope(scope)
-        self.content.find_children_by_scope(scope)
-      end
-
-      def find(string_scope)
-        scope = Scope.parse(string_scope)
-        self.find_children_by_scope(scope)
-      end
-
     end
   end
 end

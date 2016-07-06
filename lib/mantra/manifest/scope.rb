@@ -59,8 +59,6 @@ module Mantra
       end
 
       def filter(element, &block)
-        # return nil if !has_same_type?(element)
-        # raise element.map {|e| e.class.to_s }.join(", ") if element.is_a?(Array)
         return [] if !has_same_type?(element)
         matched_elements = _filter(element)
         if self.last?
