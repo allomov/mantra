@@ -63,57 +63,6 @@ module Mantra
         self.content.has_key?(method_name.to_s) || super
       end
 
-      def select(selector)
-        # return 
-        # return nil if selector.nil?
-        return self if selector.empty?
-        return nil  if !hash_selector?(selector)
-        head_selector, tail_selector = split_selector(selector, /^([a-zA-Z0-9\_\-\=\*]*)\.?(.*)$/)
-        key_matcher = to_regexp(head_selector)
-        self.content.each_pair.map do |pair|
-          key, value = *pair
-          value.select(tail_selector) if key.match(key_matcher)
-        end.compact.flatten
-      end
-
-      def add_node(selector, value)
-        head_selector, tail_selector = split_selector(selector, /^([a-zA-Z0-9\_\-\=\*]*)\.?(.*)$/)
-        if tail_selector.nil?
-          element_to_add = Element.create(value).child
-          self.content[head_selector] = element_to_add
-        elsif self.content[head_selector].nil?
-          object_to_add = {}
-          parts = tail_selector.split(".") # TODO: no arrays yet
-          first_key = parts.shift
-          last_key = parts.pop
-          last_node = parts.inject(object_to_add) { |h, part| h[part] = {}; h[part] }
-          if last_key.nil?
-            object_to_add = value
-          else
-            last_node[last_key] = value
-          end
-          self.content[first_key] = Element.create(object_to_add).child
-        else
-          key_matcher = to_regexp(head_selector)
-          self.content.each_pair.map do |pair|
-            key, value = *pair
-            value.add_node(tail_selector, value) if key.match(key_matcher)
-          end
-        end
-      end
-
-      def match_selector?(selector)
-        return true if selector.empty?
-        key, value    = *selector.split("=")
-        key_matcher   = to_regexp(key)
-        value_matcher = to_regexp(value)
-        matched_element = self.content.each_pair.find do |pair|
-          k, v = *pair
-          (k.match(key_matcher) && v.leaf? && v.content.to_s.match(value_matcher))
-        end
-        !!matched_element
-      end
-
       def traverse(&block)
         self.content.each_value do |value|
           value.traverse(&block)

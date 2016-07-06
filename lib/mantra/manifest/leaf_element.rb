@@ -18,11 +18,6 @@ module Mantra
         self.content
       end
 
-      def select(selector)
-        # raise UnknownScopeError.new("leaf can't handle selector") unless selector.empty?
-        selector.empty? ? self : nil
-      end
-
       def traverse(&block)
         block.call(self)
       end

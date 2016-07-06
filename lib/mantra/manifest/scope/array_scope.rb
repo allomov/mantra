@@ -11,7 +11,7 @@ module Mantra
           case scope
           when /^\d+$/
             index = scope.to_i
-            element.content[index]
+            [element.content[index]]
           when /^.+\=.+$/
             key_wildcard, value_wildcard = scope.split("=")
             key_matcher, value_matcher = to_regexp(key_wildcard), to_regexp(value_wildcard)

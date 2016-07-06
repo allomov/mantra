@@ -157,22 +157,6 @@ describe Mantra::Manifest::Element do
     end
   end
 
-  # describe "#add_node" do
-  #   describe "hash" do
-  #     let(:source1) do
-  #       {"networks"=>[{"name"=>"default2"},
-  #                     {"name"=>"vip", "type"=>"vip", "subnets"=>[{"name"=>"s1"}]},
-  #                     {"name"=>"default", "subnets"=>[{"range"=>"10.240.192.0/22", "gateway"=>"10.240.192.1", "dns"=>["172.30.54.9"], "static"=>["10.240.192.11-10.240.192.100"], "reserved"=>["10.240.192.0-10.240.192.10", "10.240.192.151-10.240.195.244", "10.240.195.245-10.240.195.254"], "cloud_properties"=>{"virtual_network_name"=>"US4", "subnet_name"=>"US4_CF_Sandbox_CF"}}]}],
-  #        "jobs" => [{"name"=>"some-job-1"}, {"name"=>"some-job-2"}] }
-  #     end
-  #     it "adds non existing path" do
-  #       element1.add_node("networks[].cloud_properties.az", "z1")
-  #       added_items = element1.select("networks[].cloud_properties.az")
-  #       expect(added_items.size).to eq 3
-  #     end
-  #   end
-  # end
-
   describe "#hash_element_from_selector" do
     it "creates hash from selector" do
       element = subject.element_with_selector("meta.networks.mysql.squad", 4)

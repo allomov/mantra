@@ -25,16 +25,14 @@ module Mantra
         self.parent  = parent
       end
 
-      # manifest.fetch("jobs[name=c*].properties.cf")
-      # manifest.fetch("jobs[1].properties.cf")
-      # jobs[]
-
       # this method mimics ruby Hash#fetch method
       def fetch(scope, &block)
         current_scope = Scope.parse(scope)
         element = self.root? ? self.content : self
-        current_scope.filter(element)
+        current_scope.filter(element, &block)
       end
+
+      alias_method :select, :fetch
 
       def children
         raise "not implemented"
@@ -48,12 +46,10 @@ module Mantra
         raise "unknown name"
       end
 
-      def find_children_by_scope(scope)
-        raise "not implemented"
-      end
-
       def find(string_scope)
-        raise "not implemented"
+        self.fetch(string_scope) do |element|
+          return element.first
+        end
       end
 
       def has_name?
@@ -91,11 +87,6 @@ module Mantra
         end
       end
 
-      # only for hashes
-      def selector_for(element)
-        raise "not implemented"
-      end
-
       def merge(element)
         raise "not implemented"
       end
@@ -121,10 +112,6 @@ module Mantra
         raise "not implemented"
       end
 
-      def select(selector)
-        raise "not implemented"
-      end
-
       def method_missing(method_name, *arguments, &block)
         if self.content.respond_to?(method_name)
           self.content.send(method_name, *arguments, &block)
@@ -141,15 +128,6 @@ module Mantra
         raise "not implemented"
       end
 
-      def select(selector)
-        raise "not implemented"
-      end
-
-
-      # def find(selector)
-      #   self.select(selector).first.content
-      # end
-
       def match_selector?(selector)
         selector.empty?
       end
@@ -159,16 +137,7 @@ module Mantra
       end
 
       def add_node(selector, value)
-        parts = selector.split(".")
-        existing_parts = []
-        while self.path_exist?(existing_path.join(".")) && !parts.empty?
-          existing_parts << parts.shift
-        end
-        parts_to_add = existing_parts.empty? ? parts : (parts + existing_parts.pop)
-        element_to_add = element_with_selector(parts_to_add.join("."), value)
-        self.select(existing_parts.join(".")).each do |element|
-          element.merge(element_to_add)
-        end
+        raise "not implemented"
       end
 
       def self.element_with_selector(selector, value)

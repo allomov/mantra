@@ -58,12 +58,13 @@ module Mantra
         raise "not implemented"
       end
 
-      def filter(element)
+      def filter(element, &block)
         # return nil if !has_same_type?(element)
         # raise element.map {|e| e.class.to_s }.join(", ") if element.is_a?(Array)
         return [] if !has_same_type?(element)
         matched_elements = _filter(element)
         if self.last?
+          block.call(matched_elements) if block_given?
           matched_elements
         else
           matched_elements.map do |e|
@@ -73,6 +74,7 @@ module Mantra
       end
 
       def has_same_type?(element)
+        raise element.inspect if element.is_a?(Array)
         self.type == element.type
       end
 
