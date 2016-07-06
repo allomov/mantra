@@ -1,18 +1,17 @@
 describe Mantra::Transform::TemplatizeIpAddress do
-  # subject { Mantra::Transforms::TemplatizeValue }
-  let(:transform) { Mantra::Transform.create(options.merge(type: type)) }
   let(:type)      { :"templatize-ip-address" }
+  let(:transform) { Mantra::Transform.create(options.merge(type: type)) }
   let(:source)    { Mantra::Manifest.new(options["source"]) }
   let(:target)    { Mantra::Manifest.new(options["target"]) }
-  let(:options) do
-    {
-      "source" => "manifest.yml",
-      "target" => "stub.yml",
-      "quads" => [
-        { "number" => 3, "scope" => "meta.quad" }
-      ]
-    }
-  end
+  # let(:options) do
+  #   {
+  #     "source" => "manifest.yml",
+  #     "target" => "stub.yml",
+  #     "quads" => [
+  #       { "number" => 3, "scope" => "meta.quad" }
+  #     ]
+  #   }
+  # end
 
   # let(:options) do
   #   {
@@ -36,13 +35,6 @@ describe Mantra::Transform::TemplatizeIpAddress do
       Dir.chdir(tmpdir)
     end
 
-    describe "#tampletize" do
-      it "works" do
-        result = transform.templatize(["192.168.", Scope.new("meta.net"), ".1", "-", "192.168.", Scope.new("meta.net"), ".10"])
-        expect(result.join(" ")).to eq("\"192.168.\" meta.net \".1-192.168.\" meta.net \".10\"")
-      end
-    end
-
     # describe "validations" do
     #   describe "error on source manifest doesn't exist" do
     #     let(:options) do
@@ -61,14 +53,18 @@ describe Mantra::Transform::TemplatizeIpAddress do
                       {"number" => "3", "scope"  => "meta.networks.cf.quad1", "with_value" => "2"},
                       {"number" => "3", "scope"  => "meta.networks.cf.quad2", "with_value" => "3"}]}
       end
+
       it "merges values that are already in target file" do
         transform.run
-        ip_range_template = source.find("networks[name=default].subnets[0].reserved[0]")
-        expect(ip_range_template).to eq("(( meta.networks.prefix \".\" meta.networks.cf.quad \".2-\" meta.networks.prefix \".\" meta.networks.cf.quad \".9\" ))")
-        ip_range_template = source.find("networks[name=default].subnets[0].range")
-        expect(ip_range_template).to eq("(( meta.networks.prefix \".\" meta.networks.cf.quad \".0/24\" ))")
-        ip_address_template = source.find("jobs[name=nats].networks[0].static_ips[0]")
-        expect(ip_address_template).to eq("(( meta.networks.prefix \".\" meta.networks.cf.quad \".11\" ))")
+
+        ip_address_template = source.get("jobs[name=nats].networks[0].static_ips[0]")
+        expect(ip_address_template).to eq("(( meta.networks.cf.prefix \".\" meta.networks.cf.quad1 \".11\" ))")
+
+        ip_range_template = source.get("networks[name=default].subnets[0].range")
+        expect(ip_range_template).to eq("(( meta.networks.cf.prefix \".\" meta.networks.cf.quad1 \".0/22\" ))")
+
+        ip_range_template = source.get("networks[name=default].subnets[0].reserved[0]")
+        expect(ip_range_template).to eq("(( meta.networks.cf.prefix \".\" meta.networks.cf.quad1 \".2-\" meta.networks.cf.prefix \".\" meta.networks.cf.quad2 \".9\" ))")
       end
     end
 

@@ -47,10 +47,11 @@ module Mantra
       end
 
       def find(string_scope)
-        # self.fetch(string_scope) do |element|
-        #   return element.first.to_ruby_object
-        # end
         self.fetch(string_scope).first
+      end
+
+      def get(string_scope)
+        self.find(string_scope).to_ruby_object
       end
 
       def has_name?

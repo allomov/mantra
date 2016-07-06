@@ -17,7 +17,7 @@ module Mantra
     attr_accessor :root, :file
 
     def_delegators :@root, :merge, :to_ruby_object, :traverse,
-                           :select, :find, :add_node, :fetch
+                           :select, :find, :add_node, :fetch, :get
 
     def initialize(manifest_object_or_path)
       if manifest_object_or_path.is_a?(String) && File.exist?(manifest_object_or_path)

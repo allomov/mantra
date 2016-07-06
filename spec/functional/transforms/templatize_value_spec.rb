@@ -1,7 +1,6 @@
 describe Mantra::Transform::TemplatizeValue do
-  # subject { Mantra::Transforms::TemplatizeValue }
-  let(:transform) { Mantra::Transform.create(options.merge(type: type)) }
   let(:type)      { :"templatize-value" }
+  let(:transform) { Mantra::Transform.create(options.merge(type: type)) }
   let(:source)    { Mantra::Manifest.new(options["source"]) }
   let(:target)    { Mantra::Manifest.new(options["target"]) }
 

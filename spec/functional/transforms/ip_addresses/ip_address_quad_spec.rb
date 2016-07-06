@@ -15,6 +15,7 @@ describe Mantra::Transform::TemplatizeIpAddress::QuadSplitter do
     it "extracts value" do
       result = quad.parts(templatize: true).join(" ")
       expect(result).to eq("meta.range.quad \".1\"")
+      expect(quad.values["meta.range.quad"]).to eq("192.168.0")
     end
   end
 
@@ -26,6 +27,8 @@ describe Mantra::Transform::TemplatizeIpAddress::QuadSplitter do
     it "extracts value" do
       result = quad.parts(templatize: true).join(" ")
       expect(result).to eq("meta.range.quad \".\" meta.quad \".1\"")
+      expect(quad.values["meta.quad"]).to eq("0")
+      expect(quad.values["meta.range.quad"]).to eq("192.168")
     end
   end
 
@@ -37,6 +40,8 @@ describe Mantra::Transform::TemplatizeIpAddress::QuadSplitter do
     it "extracts value" do
       result = quad.parts(templatize: true).join(" ")
       expect(result).to eq("meta.quad1 \".168.\" meta.quad3 \".1\"")
+      expect(quad.values["meta.quad3"]).to eq("0")
+      expect(quad.values["meta.quad1"]).to eq("192")
     end
   end
 
@@ -45,6 +50,7 @@ describe Mantra::Transform::TemplatizeIpAddress::QuadSplitter do
     it "extracts value" do
       result = quad.parts(templatize: true).join(" ")
       expect(result).to eq("meta.range.quad")
+      expect(quad.values["meta.range.quad"]).to eq(value)
     end
   end
 
@@ -56,6 +62,8 @@ describe Mantra::Transform::TemplatizeIpAddress::QuadSplitter do
     it "extracts value" do
       result = quad.parts(templatize: true).join(" ")
       expect(result).to eq("meta.quad1 \".168.0.1\"")
+      expect(quad.values["meta.quad3"]).to be_nil
+      expect(quad.values["meta.quad1"]).to eq("192")
     end
   end
 
@@ -67,6 +75,8 @@ describe Mantra::Transform::TemplatizeIpAddress::QuadSplitter do
     it "extracts value" do
       result = quad.parts(templatize: true).join(" ")
       expect(result).to eq("meta.quad1 \".168.\" meta.quad3 \".1\"")
+      expect(quad.values["meta.quad3"]).to eq("0")
+      expect(quad.values["meta.quad1"]).to eq("192")
     end
   end
 
@@ -77,6 +87,7 @@ describe Mantra::Transform::TemplatizeIpAddress::QuadSplitter do
     it "extracts value" do
       result = quad.parts(templatize: true).join(" ")
       expect(result).to eq("meta.quad_range \".0.1\"")
+      expect(quad.values["meta.quad_range"]).to eq("192.168")
     end
   end
 
@@ -87,6 +98,7 @@ describe Mantra::Transform::TemplatizeIpAddress::QuadSplitter do
     it "extracts value" do
       result = quad.parts(templatize: true).join(" ")
       expect(result).to eq("\"192.168.0.1\"")
+      expect(quad.values["meta.quad_range"]).to be_nil
     end
   end
 

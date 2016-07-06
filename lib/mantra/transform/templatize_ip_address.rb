@@ -18,41 +18,41 @@ module Mantra
         type:        :array
 
       def perform
-        # raise_error_if_no_source_manifest
-        # ensure_yml_file_exist(self.target)
+        raise_error_if_no_source_manifest
+        ensure_yml_file_exist(self.target)
 
-        # source_manifest.traverse do |node|
-        #   template, values = if is_ip_address?(node.content)
-        #     splitter = QuadSplitter.new(node.content, quads)
-        #     ["(( #{splitter.parts(templatize: true).join(" ")} ))", splitter.values]
-        #   elsif is_network_range?(node.content)
-        #     ip_address, network_prefix_size = *node.content.split("/")
-        #     puts "NETWORK RANGE! #{[ip_address, network_prefix_size].inspect}"
-        #     splitter = QuadSplitter.new(ip_address, quads)
-        #     network_range_parts = splitter.parts + ["/#{network_prefix_size}"]
-        #     # puts "PARTS! #{network_range_parts.inspect}"
-        #     resulting_template = "(( #{templatize(network_range_parts).join(" ")} ))"
-        #     [resulting_template, splitter.values]
-        #   elsif is_ip_range?(node.content)
-        #     ip_address1, ip_address2 = *node.content.split("-").map { |ip| ip.strip }
-        #     splitter1 = QuadSplitter.new(ip_address1, quads)
-        #     splitter2 = QuadSplitter.new(ip_address2, quads)
-        #     result = templatize(splitter1.parts + ["-"] + splitter2.parts)
-        #     ["(( #{result.join(" ")} ))", splitter1.values]
-        #   end
-        #   unless template.nil?
-        #     puts template.inspect if node.content == "192.168.3.0/24"
-        #     raise UnknownScopeError.new("Can't templatize non leaf ip address") unless node.leaf?
-        #     node.content = template
-        #     values.each_pair do |scope, value|
-        #       scope_element = Manifest::Element.element_with_selector(scope, value)
-        #       target_manifest.merge(scope_element)
-        #     end
-        #   end
-        # end
+        source_manifest.traverse do |node|
+          template, values = if is_ip_address?(node.content)
+            splitter = QuadSplitter.new(node.content, quads)
+            ["(( #{splitter.parts(templatize: true).join(" ")} ))", splitter.values]
+          elsif is_network_range?(node.content)
+            ip_address, network_prefix_size = *node.content.split("/")
+            puts "NETWORK RANGE! #{[ip_address, network_prefix_size].inspect}"
+            splitter = QuadSplitter.new(ip_address, quads)
+            network_range_parts = splitter.parts + ["/#{network_prefix_size}"]
+            # puts "PARTS! #{network_range_parts.inspect}"
+            resulting_template = "(( #{templatize(network_range_parts).join(" ")} ))"
+            [resulting_template, splitter.values]
+          elsif is_ip_range?(node.content)
+            ip_address1, ip_address2 = *node.content.split("-").map { |ip| ip.strip }
+            splitter1 = QuadSplitter.new(ip_address1, quads)
+            splitter2 = QuadSplitter.new(ip_address2, quads)
+            result = templatize(splitter1.parts + ["-"] + splitter2.parts)
+            ["(( #{result.join(" ")} ))", splitter1.values]
+          end
+          unless template.nil?
+            puts template.inspect if node.content == "192.168.3.0/24"
+            raise UnknownScopeError.new("Can't templatize non leaf ip address") unless node.leaf?
+            node.content = template
+            values.each_pair do |scope, value|
+              scope_element = Manifest::Element.element_with_selector(scope, value)
+              target_manifest.merge(scope_element)
+            end
+          end
+        end
 
-        # source_manifest.save
-        # target_manifest.save
+        source_manifest.save
+        target_manifest.save
       end
 
       def ip_address_matcher
@@ -88,8 +88,9 @@ module Mantra
 
       class QuadSplitter
         include Mantra::Helpers::TemplateHelper
-        attr_accessor :parts
+        attr_accessor :values, :parts
         def initialize(ip_address, template_quads)
+          @values = {}
           extract_options = template_quads.map do |quad|
             quad["range_object"] = if quad["number"]
               index = quad["number"].to_i - 1
@@ -108,9 +109,9 @@ module Mantra
             value_to_extract = template.quads[range].join(".")
             if option["with_value"].nil? || value_to_extract == option["with_value"]
               template.replace_with_scope(range, option["scope"])
+              @values[option["scope"]] = value_to_extract
             end
           end
-
           @parts = template.parts
         end
 
