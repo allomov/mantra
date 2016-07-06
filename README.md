@@ -1,5 +1,7 @@
 # Mantra
 
+[![Build Status](https://travis-ci.org/allomov/mantra.svg?branch=master)](https://travis-ci.org/allomov/mantra)
+
 ```
 mantra find jobs[name=consul].properties manifest.yml
 # mantra f
