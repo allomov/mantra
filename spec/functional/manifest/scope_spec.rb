@@ -133,7 +133,7 @@ describe Mantra::Manifest::Scope do
     let(:array) { [{"name" => "john", "properties" => {"knows" => "nothing"}},
                    {"key" => "value"},
                    hash ] }
-    let(:hash) { {"name" => "joffrey", "dead" => true} }
+    let(:hash)  { {"name" => "joffrey", "dead" => true, "body" => { "stomach" => "poison" }} }
 
     let(:array_element) { Mantra::Manifest::Element.create(array).child }
     let(:hash_element) { Mantra::Manifest::Element.create(hash).child }
@@ -210,7 +210,24 @@ describe Mantra::Manifest::Scope do
     end
 
     describe "with hash scope" do
-
+      describe "b*dy" do
+        let(:scope) { subject.parse("b*dy") }
+        it "for array" do
+          result = scope.filter(hash_element)          
+          expect(result).to be_a(Array)
+          expect(result.size).to eq(1)
+          expect(result.map(&:to_ruby_object).first).to eq(hash["body"])
+        end
+      end
+      describe "b*dy.stomach" do
+        let(:scope) { subject.parse("b*dy.stomach") }
+        it "for array" do
+          result = scope.filter(hash_element)          
+          expect(result).to be_a(Array)
+          expect(result.size).to eq(1)
+          expect(result.map(&:to_ruby_object).first).to eq(hash["body"]["stomach"])
+        end
+      end
     end
 
     describe "with empty scope" do
@@ -233,6 +250,5 @@ describe Mantra::Manifest::Scope do
     end
 
   end
-
 
 end
