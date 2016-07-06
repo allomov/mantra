@@ -21,11 +21,15 @@ class IpAddressTemplate
   def initialize(ip_address)
     @quads = ip_address.split(".").map { |q| Value.new(q) }
   end
+
   def replace_with_scope(range, scope)
     range.to_a.each do |i|
       @quads[i] = Scope.new(scope: scope, value: @quads[i])
     end
   end
+
+  alias_method :replace_quad_range_with_scope, :replace_with_scope
+
   def parts
     result = [@quads.first]
     @quads[1..-1].each do |q|

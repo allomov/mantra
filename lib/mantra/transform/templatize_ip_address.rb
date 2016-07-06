@@ -71,25 +71,25 @@ module Mantra
         !!value.to_s.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/)
       end
 
-      def templatize(parts)
-        merged_parts = [parts.shift]
-        parts.each do |p|
-          if !p.is_a?(Scope) && !merged_parts.last.is_a?(Scope)
-            merged_parts.last.concat(p)
-          else
-            merged_parts << p
-          end
-        end
-        merged_parts.select { |p| !p.empty? }.map do |p|
-          p.is_a?(Scope) ? p : "\"#{p}\""
-        end
-      end
+      # def templatize(parts)
+      #   raise "wrong!!!"
+      #   merged_parts = [parts.shift]
+      #   parts.each do |p|
+      #     if !p.is_a?(Scope) && !merged_parts.last.is_a?(Scope)
+      #       merged_parts.last.concat(p)
+      #     else
+      #       merged_parts << p
+      #     end
+      #   end
+      #   merged_parts.select { |p| !p.empty? }.map do |p|
+      #     p.is_a?(Scope) ? p : "\"#{p}\""
+      #   end
+      # end
 
       class QuadSplitter
         include Mantra::Helpers::TemplateHelper
-        attr_accessor :values, :parts
+        attr_accessor :parts
         def initialize(ip_address, template_quads)
-          
           extract_options = template_quads.map do |quad|
             quad["range_object"] = if quad["number"]
               index = quad["number"].to_i - 1
@@ -104,21 +104,14 @@ module Mantra
           template = IpAddressTemplate.new(ip_address)
 
           extract_options.each do |option|
-            template.replace_with_scope(option["range_object"], option["scope"])
-          end
-
-          result = template.parts.map do |p|
-            if p.is_scope?
-              current_scope = extract_options.find { |option| option["scope"] == p.scope }
-              if current_scope["with_value"] == p.value
-                p
-              else
-                IpAddressTemplate::Value.new(p.value)
-              end
+            range = option["range_object"]
+            value_to_extract = template.quads[range].join(".")
+            if option["with_value"].nil? || value_to_extract == option["with_value"]
+              template.replace_with_scope(range, option["scope"])
             end
           end
 
-          @parts = result
+          @parts = template.parts
         end
 
         def parts(options={templatize: false})
