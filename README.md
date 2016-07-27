@@ -4,7 +4,7 @@
 
 ### Description
 
-Mantra (/ˈmæntrə/, abr. Manifest Transformation) is a tool to ease work with manifests.
+Mantra (/ˈmæntrə/, abr. **Man**ifest **Tra**nsformation) is a tool to ease work with manifests.
 
 It allows to do following:
 
@@ -47,69 +47,84 @@ mantra transform -c transformation-manifest.yml -m manifest.yml
 Here is an example of `transformation-manifest.yml`:
 
 ```yaml
+global:
+  source: manifest.yml
+  target: cloud-config.yml
 transforms:
-- type: filter
-  sections: ["networks", "compilation", "update", "resource_pools", "disk_pools"]
-- type: rename
-  section: "resource_pools"
-  to: "vm_types"
-- type: rename
-  section: "disk_pools"
-  to: "disk_types"
+- filter:
+    sections: ["networks", "compilation", "update", "resource_pools", "disk_pools"]
+- rename:
+    section: "resource_pools"
+    to: "vm_types"
+- rename:
+    section: "disk_pools"
+    to: "disk_types"
 - type: add
-  section:
-    az: z1
-  to: "networks[].subnets[]"
-- type: add
-  section:
-    az: z1
-  to: "update"
-- type: add
-  section:
-    az: z1
-  to: "compilation"
-- type: add
-  section:
-    azs:
-    - name: z1
-  to: ""
+    section:
+      az: z1
+    to: "networks[].subnets[]"
+- add:
+    section:
+      az: z1
+    to: "update"
+- add:
+    section:
+      az: z1
+    to: "compilation"
+- add:
+    section:
+      azs:
+      - name: z1
+    to: ""
 ```
 
 
 ```yaml
+global_vars:
+  source: manifest.yml
 transforms:
-- type: extract-section
-  section: jobs
-  source: manifest.yml
-  target: workspace/jobs.yml  
-- type: extract-certificates
-  source: workspace/properties.yml
-  target: workspace/secrets.yml
-- type: extract-certificates-to-files
-  source: workspace/secrets.yml
-  target: workspace/secrets
-- type: extract
-  source: manifest.yml
-  section: jobs
-- type: extract
-  source: manifest.yml
-  section: resource_pools
-- type: extract
-  source: manifest.yml
-  section: resource_pools
-- type: extract-spiff-option
-  source: manifest.yml
-  target: workspace/stub.yml
-  regex: "*cfdomain.com*"
-  spiff-property: meta.domain
-- type: templatize-value
-  source: manifest.yml
-  target: workspace/stub.yml
-  value: "*cfdomain.com*"
-  spiff-property: meta.domain
-```
-
-```
+- extract:
+    section: jobs
+    to:   workspace/jobs.yml  
+- extract-certs:
+    from: workspace/properties.yml
+    to:   workspace/secrets.yml
+- extract-certs-to-files:
+    from: workspace/secrets.yml
+    to:   workspace/secrets
+- extract:
+    section: jobs
+    to:
+      file: manifest.yml
+      with_scope: meta.jobs
+- extract:
+    source: manifest.yml
+    section: resource_pools
+- extract:
+    section: resource_pools
+    to: resource_pools.yml
+- extract:
+    section: networks
+    to: networks.yml
+- templatize-ip-address:
+    from:  networks.yml
+    to: workspace/stub.yml
+    quads:
+      - range: "1-2"
+        scope: meta.networks.cf.prefix
+        with_value: "192.168"
+      - number: 3
+        scope: meta.networks.cf.quad1
+        with_value: 2
+      - number: 3
+        scope: meta.networks.cf.quad2
+        with_value: 3
+- templatize-value:
+    source: manifest.yml
+    to: workspace/stub.yml
+    value: cfdomain.com
+    in: "*.cfdomain.com"
+    scope: meta.domain
 ```
 
 
