@@ -12,9 +12,9 @@ module Mantra
         ""
       end
 
-      def merge(element)
+      def merge(element, options={})
         raise merge_conflict_error(element) unless self.can_merge?(element)
-        self.content.merge(element.content)
+        self.content.merge(element.content, options)
       end
 
       def to_ruby_object

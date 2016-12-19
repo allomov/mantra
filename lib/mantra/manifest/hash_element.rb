@@ -11,10 +11,10 @@ module Mantra
         end
       end
 
-      def merge(element)
+      def merge(element, options={})
         raise merge_conflict_error(element) unless self.can_merge?(element)
         self.content.merge!(element.content) do |_, self_element, element_to_merge|
-          self_element.merge(element_to_merge)
+          self_element.merge(element_to_merge, options)
         end
         self
       end

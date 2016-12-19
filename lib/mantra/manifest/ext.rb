@@ -21,7 +21,7 @@ module Mantra
           end
           manifest_properties = self.root.child.hash? ? self.root.child.content["properties"] : Element.create({}).content
           manifest_properties.merge(job_properties)
-          manifest_properties
+          Element.create(manifest_properties)
         end
 
         def jobs

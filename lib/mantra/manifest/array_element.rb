@@ -10,11 +10,11 @@ module Mantra
         end
       end
 
-      def merge(element)
+      def merge(element, options={})
         raise merge_conflict_error(element) unless self.can_merge?(element)
         elements_to_add = element.content.dup
-        merge_by_name(elements_to_add)
-        merge_by_value(elements_to_add)
+        merge_by_name(elements_to_add, options)
+        merge_by_value(elements_to_add, options)
         self.content.concat(elements_to_add)
         self
       end
@@ -41,13 +41,13 @@ module Mantra
         self.content.index(element).to_s
       end
 
-      def merge_by_value(elements)
+      def merge_by_value(elements, options={})
         self.content.each do |self_element|
           element_with_the_same_value = elements.find do |element_to_add|
             self_element.content == element_to_add.content
           end
           unless element_with_the_same_value.nil?
-            self_element.merge(element_with_the_same_value)
+            self_element.merge(element_with_the_same_value, options)
             elements.delete(element_with_the_same_value)
           end
         end
@@ -57,13 +57,13 @@ module Mantra
         self.content
       end
 
-      def merge_by_name(elements)
+      def merge_by_name(elements, options={})
         self.content.each do |self_element|
           element_with_the_same_name = elements.find do |element_to_add|
             self_element.has_equal_name?(element_to_add)
           end
           unless element_with_the_same_name.nil?
-            self_element.merge(element_with_the_same_name)
+            self_element.merge(element_with_the_same_name, options)
             elements.delete(element_with_the_same_name)
           end
         end

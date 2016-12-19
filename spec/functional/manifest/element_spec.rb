@@ -89,6 +89,22 @@ describe Mantra::Manifest::Element do
       end
     end
 
+    describe "complex hash" do
+      let(:source1) do
+        {"a"=>1, "b"=>{"c"=>2, "d"=>4}}
+      end
+      let(:source2) do
+        {"a"=>3, "b"=>{"c"=>3, "e"=>3}}
+      end
+      it "merges elements with the same name and add elements that didn't exist" do
+        element1.merge(element2, force: true)
+        expect(element1.get("a")).to eq 1
+        expect(element1.get("b.c")).to eq 2
+        expect(element1.get("b.d")).to eq 4
+        expect(element1.get("b.e")).to eq 3
+      end
+    end
+
     describe "deep merge" do
     end
     describe "with collisions" do

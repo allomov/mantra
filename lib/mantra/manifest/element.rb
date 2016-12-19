@@ -90,7 +90,7 @@ module Mantra
         end
       end
 
-      def merge(element)
+      def merge(element, options={})
         raise "not implemented"
       end
 
@@ -100,7 +100,7 @@ module Mantra
 
       def merge_conflict_error(element)
         object = element.respond_to?(:to_ruby_object) ? element.to_ruby_object : element.inspect
-        MergeConflictError.new("merge conflicts: #{self.to_ruby_object} with #{object}")
+        MergeConflictError.new("merge conflicts: types: #{self.class} against #{element.class}, values:  #{self.to_ruby_object} with #{object}")
       end
 
       def can_merge?(element)
