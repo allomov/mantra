@@ -13,7 +13,7 @@ module Mantra
       end
 
       def merge(element)
-        raise merge_conflict_error unless self.can_merge?(element)
+        raise merge_conflict_error(element) unless self.can_merge?(element)
         self.content.merge(element.content)
       end
 

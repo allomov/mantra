@@ -51,7 +51,8 @@ module Mantra
       end
 
       def get(string_scope)
-        self.find(string_scope).to_ruby_object
+        result = self.find(string_scope)
+        result.nil? ? nil : result.to_ruby_object
       end
 
       def has_name?
