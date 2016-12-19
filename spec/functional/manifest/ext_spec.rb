@@ -10,8 +10,8 @@ describe Mantra::Manifest::Ext do
   end
 
   describe "#properties" do
-    it "returns hash element" do
-      expect(manifest.properties.class).to eq(Mantra::Manifest::HashElement)
+    it "returns root element" do
+      expect(manifest.properties.class).to eq(Mantra::Manifest::RootElement)
     end
 
     it "contain properties from global section" do

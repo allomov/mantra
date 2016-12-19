@@ -93,6 +93,11 @@ module Mantra
       @target_manifest ||= Manifest.new(self.target)
     end
 
+    def previous_transform
+      self.options[:previous_transform]
+    end
+
+
 
   end
 end
@@ -102,7 +107,10 @@ require "mantra/transform/inputs/hash"
 require "mantra/transform/inputs/array"
 require "mantra/transform/inputs/file"
 require "mantra/transform/inputs/folder"
+require "mantra/transform/inputs/any"
 
+require "mantra/transform/merge"
+require "mantra/transform/replace"
 require "mantra/transform/extract_section"
 require "mantra/transform/extract_certificates"
 require "mantra/transform/extract_certificates_to_files"

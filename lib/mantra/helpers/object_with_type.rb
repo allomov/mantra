@@ -20,7 +20,7 @@ module Mantra
         end
 
         def create(options)
-          type = options[:type]
+          type = options[:type] || options["type"]
           raise UnspecifiedType.new("options hash should contain type") if type.nil?
           subclass = self.find_by_type(type.to_sym)
           if subclass.nil?
