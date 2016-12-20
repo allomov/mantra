@@ -17,8 +17,6 @@ module Mantra
 
         scope = @manifest.fetch(self.scope)
         scope.each do |s|
-          puts "psssss!!"
-          puts s.class
           s.content = self.value
         end
       end
