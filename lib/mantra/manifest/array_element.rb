@@ -11,6 +11,7 @@ module Mantra
       end
 
       def merge(element, options={})
+        element = escape_root(element)
         raise merge_conflict_error(element) unless self.can_merge?(element)
         elements_to_add = element.content.dup
         merge_by_name(elements_to_add, options)

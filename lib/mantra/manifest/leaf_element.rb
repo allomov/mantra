@@ -9,6 +9,7 @@ module Mantra
       end
 
       def merge(element, options={})
+        element = escape_root(element)
         raise merge_conflict_error(element) unless self.can_merge?(element)
         if !options[:force]
           raise MergeConflictError.new("value conflict detected: #{self.content} != #{element.content}") if self.content != element.content

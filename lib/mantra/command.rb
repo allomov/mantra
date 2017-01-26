@@ -48,4 +48,5 @@ module Mantra
 end
 
 require "mantra/commands/find"
+require "mantra/commands/merge"
 require "mantra/commands/transform"

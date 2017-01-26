@@ -103,6 +103,10 @@ module Mantra
         MergeConflictError.new("merge conflicts: types: #{self.class} against #{element.class}, values:  #{self.to_ruby_object} with #{object}")
       end
 
+      def escape_root(element)
+        element.type == :root ? element.content : element
+      end
+
       def can_merge?(element)
         if element.respond_to?(:type)
           self.type == element.type
