@@ -13,14 +13,14 @@ module Mantra
 
       def perform
         @manifest = previous_transform.result
-        unless @manifest.find(new_name).nil?
-          raise Mantra::Transform::ValidationError.new("Section with the name #{new_name} already exists.") 
-        end
         elemenents_to_rename = @manifest.select(section)
 
         elemenents_to_rename.each do |element|
           parent = element.parent
-          raise "parent should be a hash" unless parent.hash?
+          raise Mantra::Transform::ValidationError.new ("parent should be a hash") unless parent.hash?
+          unless parent.find(new_name).nil?
+            raise Mantra::Transform::ValidationError.new("Section with the name #{new_name} already exists.")
+          end
           old_name = parent.selector_for(element)
           parent.content[new_name] = element
           parent.content.delete(old_name)
