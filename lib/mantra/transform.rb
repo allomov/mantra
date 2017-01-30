@@ -110,6 +110,8 @@ require "mantra/transform/inputs/folder"
 require "mantra/transform/inputs/any"
 
 require "mantra/transform/merge"
+require "mantra/transform/filter"
+require "mantra/transform/rename"
 require "mantra/transform/replace"
 require "mantra/transform/extract_section"
 require "mantra/transform/extract_certificates"

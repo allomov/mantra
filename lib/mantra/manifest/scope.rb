@@ -49,7 +49,7 @@ module Mantra
       end
 
       def last?
-        self.is_a?(EmptyScope)
+        self.next.is_a?(EmptyScope)
       end
 
       alias_method :tail, :next

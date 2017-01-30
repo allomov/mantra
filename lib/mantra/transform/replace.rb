@@ -12,7 +12,7 @@ module Mantra
                       type:        :string
 
       def perform
-        @manifest = previous_transform.manifest
+        @manifest = previous_transform.result
         # value_manifest_element = Mantra::Manifest::Element.create(self.value).content
 
         scope = @manifest.fetch(self.scope)

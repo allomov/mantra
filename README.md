@@ -4,13 +4,14 @@
 
 ### Description
 
-Mantra (/ˈmæntrə/, abr. **Man**ifest **Tra**nsformation) is a tool to ease work with manifests.
+Mantra (/ˈmæntrə/, abr. **Man**ifest **Tra**nsformation) is a tool to ease work with BOSH manifests.
 
 It allows to do following:
 
 * find manifest parts 
-* extract cloud config from you BOSH v1 manifest
-* convert your manifest into spiff templates with
+* extract cloud config for BOSH v2 from your BOSH v1 manifest
+* convert you BOSH v1 manifest to BOSH v2 manifest
+* convert your manifest into bosh-cli templates with
   * extracted passwords
   * extracted certificates to different files
   * templatized network configuration
@@ -28,6 +29,8 @@ While some actions performed on manifest can be automated, anther require specia
 `Target Manifest` - manifest that will contain extracted template properties, to restore source manifest you'll need to run merge tool with resulting source manifest.
 `Transform` - a ruby class that declares how specific transformation should be done.
 
+One more concept: no nokogiri and native dependencies.
+
 ### Examples
 
 Find and output in json some manifest parts:
@@ -38,6 +41,13 @@ mantra find jobs[name=consul].properties -m manifest.yml -f json
 ```
 
 Transform BOSH v1 manifest to extract cloud config:
+
+### Run tests
+
+```
+
+```
+
 
 ```
 mantra transform -c transformation-manifest.yml -m manifest.yml

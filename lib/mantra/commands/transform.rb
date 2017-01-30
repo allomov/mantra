@@ -7,7 +7,7 @@ module Mantra
       alias_type :t
       attr_accessor :manifest
 
-      option :transform_config_path, "--config CONFIG",     "-c", "Transformation config path"
+      option :transform_config_path, "--config CONFIG",     "-t", "Transformation config path"
       option :manifest_path,         "--manifest MANIFEST", "-m", "Manifest path"
 
       def transform_config
@@ -22,7 +22,7 @@ module Mantra
         end
       end
 
-      def manifest
+      def result
         @manifest ||= Manifest.new(self.manifest_path)
       end
 

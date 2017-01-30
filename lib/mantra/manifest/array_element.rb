@@ -21,7 +21,8 @@ module Mantra
       end
 
       def find_children_by_scope(scope)
-        return [] unless scope.array?
+        return Element.create([]) unless scope.array?
+        # return 
         self.content.map do |element|
           if scope.match?(element)
             if scope.has_next?

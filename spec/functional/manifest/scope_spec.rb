@@ -85,6 +85,17 @@ describe Mantra::Manifest::Scope do
       expect(parsed_scope.scope).to eq("starks")
     end
 
+    it "parses simple hash" do
+      parsed_scope = subject.parse_selector("jobs")
+      expect(parsed_scope.to_a.map { |s| s.type }).to eq(%i(hash empty))
+      expect(parsed_scope.scope).to eq("jobs")
+    end
+
+    it "parses simple hash with simple array" do
+      parsed_scope = subject.parse_selector("jobs[]")
+      expect(parsed_scope.to_a.map { |s| s.type }).to eq(%i(hash array empty))
+    end
+
     it "parses nested arrays" do
       parsed_scope = subject.parse_selector("[name=st*rks][name=aria].name")
       expect(parsed_scope.to_a.map { |s| s.type }).to eq(%i(array array hash empty))
@@ -133,7 +144,8 @@ describe Mantra::Manifest::Scope do
     let(:array) { [{"name" => "john", "properties" => {"knows" => "nothing"}},
                    {"key" => "value"},
                    hash ] }
-    let(:hash)  { {"name" => "joffrey", "dead" => true, "body" => { "stomach" => "poison" }} }
+    let(:hash)  { {"name" => "joffrey", "dead" => true, "body" => { "stomach" => "poison" }, 
+                   "lessons_learned" => [ "don't be evil", "karma works", "teens with too much power run amok" ]} }
 
     let(:array_element) { Mantra::Manifest::Element.create(array).child }
     let(:hash_element) { Mantra::Manifest::Element.create(hash).child }
@@ -145,8 +157,9 @@ describe Mantra::Manifest::Scope do
         it "for array" do
           # raise scope.inspect
           result = scope.filter(array_element)
-          expect(result).to be_a(Array)
-          expect(result.map(&:to_ruby_object)).to eq(array)
+          expect(result).to be_an(Array)
+          expect(result.size).to eq(1)
+          expect(result.first.map(&:to_ruby_object)).to eq(array)
         end
         it "for hash" do
           result = scope.filter(hash_element)
@@ -228,6 +241,25 @@ describe Mantra::Manifest::Scope do
           expect(result.map(&:to_ruby_object).first).to eq(hash["body"]["stomach"])
         end
       end
+      describe "lessons_learned" do
+        let(:scope) { subject.parse("lessons_learned") }
+        it "for array" do
+          result = scope.filter(hash_element)          
+          expect(result).to be_a(Array)
+          expect(result.size).to eq(1)
+          expect(result.first.map(&:to_ruby_object)).to eq(hash["lessons_learned"])
+        end
+      end
+      # describe "lessons_learned[]" do
+      #   let(:scope) { subject.parse("lessons_learned[]") }
+      #   it "for array" do
+      #     result = scope.filter(hash_element)          
+      #     expect(result).to be_a(Array)
+      #     expect(result.size).to eq(1)
+      #     expect(result.map(&:to_ruby_object).first).to eq(hash["body"]["stomach"])
+      #   end
+      # end
+
     end
 
     describe "with empty scope" do

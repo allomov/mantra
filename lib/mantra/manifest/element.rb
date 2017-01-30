@@ -147,6 +147,9 @@ module Mantra
         raise "not implemented"
       end
 
+      # there is a number of limitations on this method:
+      # you can not use wildcard characters, for instance jobs[name=*]
+      # you can not use selectors with array filters, such as jobs[name=sample]
       def self.element_with_selector(selector, value)
         object_to_add = {}
         parts = selector.split(".")
