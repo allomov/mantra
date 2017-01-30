@@ -33,122 +33,14 @@ One more concept: no nokogiri and native dependencies.
 
 ### Examples
 
-Find and output in json some manifest parts:
-
-```
-mantra find jobs[name=consul].properties -m manifest.yml -f json
-# alias: mantra f
-```
-
-Transform BOSH v1 manifest to extract cloud config:
+- [Convert BOSH v1 manifest to BOSH v2 manifest](https://github.com/allomov/mantra/blob/master/examples/convert-bosh-manifest-to-v2.md)
+- [Extract cloud config from BOSH v1 manifest](https://github.com/allomov/mantra/blob/master/examples/extract-cloud-config.md)
 
 ### Run tests
 
 ```
-
+rake
 ```
-
-
-```
-mantra transform -c transformation-manifest.yml -m manifest.yml
-# mantra t
-```
-
-Here is an example of `transformation-manifest.yml`:
-
-```yaml
-global:
-  source: manifest.yml
-  target: cloud-config.yml
-transforms:
-- filter:
-    sections: ["networks", "compilation", "update", "resource_pools", "disk_pools"]
-- rename:
-    section: "resource_pools"
-    to: "vm_types"
-- rename:
-    section: "disk_pools"
-    to: "disk_types"
-- type: add
-    section:
-      az: z1
-    to: "networks[].subnets[]"
-- add:
-    section:
-      az: z1
-    to: "update"
-- add:
-    section:
-      az: z1
-    to: "compilation"
-- add:
-    section:
-      azs:
-      - name: z1
-    to: ""
-```
-
-
-```yaml
-global_vars:
-  source: manifest.yml
-transforms:
-- extract:
-    section: jobs
-    to:   workspace/jobs.yml  
-- extract-certs:
-    from: workspace/properties.yml
-    to:   workspace/secrets.yml
-- extract-certs-to-files:
-    from: workspace/secrets.yml
-    to:   workspace/secrets
-- extract:
-    section: jobs
-    to:
-      file: manifest.yml
-      with_scope: meta.jobs
-- extract:
-    source: manifest.yml
-    section: resource_pools
-- extract:
-    section: resource_pools
-    to: resource_pools.yml
-- extract:
-    section: networks
-    to: networks.yml
-- templatize-ip-address:
-    from:  networks.yml
-    to: workspace/stub.yml
-    quads:
-      - range: "1-2"
-        scope: meta.networks.cf.prefix
-        with_value: "192.168"
-      - number: 3
-        scope: meta.networks.cf.quad1
-        with_value: 2
-      - number: 3
-        scope: meta.networks.cf.quad2
-        with_value: 3
-- templatize-value:
-    source: manifest.yml
-    to: workspace/stub.yml
-    value: cfdomain.com
-    in: "*.cfdomain.com"
-    scope: meta.domain
-```
-
-
-## Installation
-
-Install it as a gem:
-
-```
-    $ gem install mantra
-```
-
-## Dependencies
-
-`openssl`!
 
 ## Contributing
 

@@ -89,9 +89,10 @@ And run this command:
 ```command
 mantra transform -m manifest.yml -t transform.yml
 ```
-
+<!-- 
 And get following output:
 
 ```output
 
 ```
+ -->
