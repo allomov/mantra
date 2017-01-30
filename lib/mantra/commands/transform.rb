@@ -16,21 +16,20 @@ module Mantra
 
       def transforms
         previous_transform = self
-        transform_config["transforms"].map do |t|
-          t.merge!(previous_transform: previous_transform)
-          previous_transform = Mantra::Transform.create(t)
+        transform_config["transforms"].map do |options|
+          options.merge!(previous_transform: previous_transform)
+          previous_transform = Mantra::Transform.create(options)
         end
       end
 
       def result
-        @manifest ||= Manifest.new(self.manifest_path)
+        @manifest ||= Manifest.new(self.manifest_path).root
       end
 
       def perform
         transforms.each do |t|
           t.run
         end
-        puts manifest.to_ruby_object.to_yaml
       end
 
     end

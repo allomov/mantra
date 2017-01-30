@@ -1,7 +1,5 @@
 
-# Convert BOSH manifest v1 to manifest v2
-
-Imagine you have a following BOSH v1 manifest in following format:
+# How to extract Cloud Config
 
 ```file:manifest.yml
 compilation:
@@ -63,35 +61,32 @@ update:
   max_in_flight: 6
 ```
 
-You should be able to define transformations in the following format:
-
 ```file:transform.yml
 transforms:
-- type: filter
-  sections: ["jobs", "releases", "stemcells", "update"]
-- type: rename
-  section: "jobs"
-  to: "instance_groups"
-- type: rename
-  section: "instance_groups[].templates"
-  to: "jobs"
+- type: "filter"
+  sections: ["networks", "compilation", "update", "resource_pools", "disk_pools"]
+- type: "rename"
+  section: "resource_pools"
+  to: "vm_types"
+- type: "rename"
+  section: "disk_pools"
+  to: "disk_types"
 - type: merge
-  value:
-    azs: az1
-  to: "instance_groups[]"
-- type: rename
-  section: "instance_groups[].resource_pools"
-  to: "vm_type"
+  value: &az-hash
+    az: az1
+  to: "networks[].subnets[]"
+- type: merge
+  value: *az-hash
+  to: "update"
+- type: merge
+  value: *az-hash
+  to: "compilation"
 ```
-
-And run this command:
 
 ```command
 mantra transform -m manifest.yml -t transform.yml
 ```
 
-And get following output:
-
 ```output
-
+value
 ```

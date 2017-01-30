@@ -65,6 +65,10 @@ module Mantra
       raise "not implemented"
     end
 
+    def result
+      raise "not implemented"
+    end
+
     def ensure_yml_file_exist(path)
       return if File.exist?(path)
       pathname = Pathname.new(path)
