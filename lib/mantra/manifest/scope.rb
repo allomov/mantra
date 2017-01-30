@@ -67,7 +67,7 @@ module Mantra
         else
           matched_elements.map do |e|
             self.next.filter(e)
-          end.compact.flatten
+          end.compact.flatten(1)
         end
       end
 

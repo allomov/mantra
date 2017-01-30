@@ -37,7 +37,6 @@ describe Mantra::Transform::Rename do
          "to" => "instance_groups"}
       end
 
-
       before(:each) {transform.run}
 
       it "has a right class for result" do
@@ -47,6 +46,11 @@ describe Mantra::Transform::Rename do
       it "has a right sections in result" do
         expect(transform.result.content.keys).to include(options["to"])
       end
+
+      it "has a no wrong sections in result" do
+        expect(transform.result.content.keys).not_to include(options["section"])
+      end
+
     end
   end
 end

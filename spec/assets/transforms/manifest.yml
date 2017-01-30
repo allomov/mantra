@@ -68,7 +68,7 @@ resource_pools:
 
 jobs:
 - name: nats
-  template: nats
+  templates: [ { name: nats }]
   instances: 1
   resource_pool: infrastructure
   networks:
@@ -78,7 +78,7 @@ jobs:
 
 
 - name: ccdb
-  template: postgres
+  templates: [ { name: postgres } ]
   instances: 1
   resource_pool: infrastructure
   persistent_disk: 8192
@@ -88,14 +88,14 @@ jobs:
     - 192.168.3.13
 
 - name: stager
-  template: stager
+  templates: [ { name: stager } ]
   instances: 1
   resource_pool: infrastructure
   networks:
   - name: default
 
 - name: cloud_controller
-  template: cloud_controller
+  templates: [ { name:  cloud_controller } ]
   instances: 1
   resource_pool: infrastructure
   networks:
@@ -115,10 +115,8 @@ jobs:
       nfs_server:
         address: 192.168.3.10
 
-
-
 - name: debian_nfs_server
-  template: debian_nfs_server
+  templates: [ { name:  debian_nfs_server } ]
   instances: 1
   resource_pool: infrastructure
   persistent_disk: 8192
@@ -128,7 +126,7 @@ jobs:
     - 192.168.3.10
 
 - name: uaa
-  template: uaa
+  templates: [ { name:  uaa } ]
   instances: 1
   resource_pool: infrastructure
   persistent_disk: 8192
@@ -141,7 +139,7 @@ jobs:
       url: http://login.example-domain.com
 
 - name: health_manager
-  template: health_manager_next
+  templates: [ { name:  health_manager_next } ]
   instances: 1
   resource_pool: infrastructure
   networks:
@@ -150,7 +148,7 @@ jobs:
     - 192.168.3.109
 
 - name: router_next
-  template: router_next
+  templates: [ { name:  router_next } ]
   instances: 1
   resource_pool: infrastructure
   networks:
@@ -159,7 +157,7 @@ jobs:
     - 192.168.3.100
 
 - name: dea
-  template: dea
+  templates: [ { name:  dea } ]
   instances: 1
   resource_pool: infrastructure
   networks:
@@ -167,7 +165,7 @@ jobs:
 
 
 - name: postgresql_node
-  template: postgresql_node
+  templates: [ { name:  postgresql_node } ]
   instances: 1
   resource_pool: infrastructure
   persistent_disk: 650
@@ -177,14 +175,14 @@ jobs:
     - 192.168.3.70
 
 - name: postgresql_gateway
-  template: postgresql_gateway
+  templates: [ { name:  postgresql_gateway } ]
   instances: 1
   resource_pool: infrastructure
   networks:
   - name: default
 
 - name: vcap_redis
-  template: vcap_redis
+  templates: [ { name:  vcap_redis } ]
   instances: 1
   resource_pool: infrastructure
   networks:

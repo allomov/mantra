@@ -3,13 +3,14 @@ module Mantra
     class Filter < Mantra::Transform
       type :filter
       attr_accessor :result
+      # alias_method :result, :manifest
 
       description "Filter"
 
       input "sections", description: "list of paths to elements that should be left after this transform ", type: :any
 
       def perform
-        @result = Mantra::Manifest::Element.create({})
+        @result = Mantra::Manifest.new({}).root
         manifest = previous_transform.result
         sections.each do |p|
           elements = manifest.select(p)

@@ -35,6 +35,7 @@ describe Mantra::Transform::Filter do
       it "has a right sections in result" do
         expect(transform.result.content.keys).to eq(options["sections"])
       end
+
     end
   end
 end
