@@ -10,9 +10,9 @@ module Mantra
 
       def perform
         @result = Mantra::Manifest::Element.create({})
-        @manifest = previous_transform.result
+        manifest = previous_transform.result
         sections.each do |p|
-          elements = @manifest.select(p)
+          elements = manifest.select(p)
           elements.each do |e|
             direct_path = e.path
             root_element_to_merge = Mantra::Manifest::Element.element_with_selector(direct_path, e.content)

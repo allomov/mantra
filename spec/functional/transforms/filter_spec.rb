@@ -19,8 +19,9 @@ describe Mantra::Transform::Filter do
 
     describe "sample test" do
       let(:options) do
-        {"sections" => [ "jobs", "releases", "stemcells", "update" ]}
+        {"sections" => [ "jobs", "releases", "update"]}
       end
+
       let(:manifest) do
         YAML.load_file(assets_path("transforms", "manifest.yml"))
       end
@@ -32,9 +33,8 @@ describe Mantra::Transform::Filter do
       end
 
       it "has a right sections in result" do
-        expect(transform.result.content.keys).to be(eq(options["sections"]))
+        expect(transform.result.content.keys).to eq(options["sections"])
       end
-
     end
   end
 end

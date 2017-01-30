@@ -3,8 +3,11 @@
 name: cf
 director_uuid: 5fc42e3c-3261-4b56-bba9-228b08963bd6
 
-release:
-  name: appcloud
+releases:
+- name: release-1
+  version: 84
+releases:
+- name: release-2
   version: 84
 
 compilation:
@@ -211,7 +214,7 @@ properties:
     port: 5524
     pool_size: 10
     databases:
-      - name: appcloud
+      - name: release-1
         tag: cc
     roles:
       - tag: admin

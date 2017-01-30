@@ -37,22 +37,24 @@ describe Mantra::Manifest do
         end
       end
     end
+
     describe "jobs[]" do
       let(:scope) { "jobs[]" }
       it "returns an array element" do
-        expect(result.size).to(eq(2))
-        # expect(result).to(be_a(Mantra::Manifest::ArrayElement))
+        expect(result).to be_an(Array)
+        expect(result.size).to(eq(12))
+        result.each do |element|
+          expect(element).to(be_a(Mantra::Manifest::HashElement))
+        end
       end
     end
     describe "jobs" do
       let(:scope) { "jobs" }
       it "returns an array element" do
+        expect(result).to be_an(Array)
         expect(result.size).to(eq(1))
-        # expect(result).to(be_a(Mantra::Manifest::ArrayElement))
+        expect(result.first).to(be_a(Mantra::Manifest::ArrayElement))
       end
-      # it "returns an array element" do
-      #   expect(result).to(be_a(Mantra::Manifest::ArrayElement))
-      # end
     end
 
   end

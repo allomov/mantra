@@ -155,11 +155,10 @@ describe Mantra::Manifest::Scope do
       describe "[]" do
         let(:scope) { subject.parse("[]") }
         it "for array" do
-          # raise scope.inspect
           result = scope.filter(array_element)
           expect(result).to be_an(Array)
-          expect(result.size).to eq(1)
-          expect(result.first.map(&:to_ruby_object)).to eq(array)
+          expect(result.size).to eq(3)
+          expect(result.map(&:to_ruby_object)).to eq(array)
         end
         it "for hash" do
           result = scope.filter(hash_element)
@@ -250,16 +249,15 @@ describe Mantra::Manifest::Scope do
           expect(result.first.map(&:to_ruby_object)).to eq(hash["lessons_learned"])
         end
       end
-      # describe "lessons_learned[]" do
-      #   let(:scope) { subject.parse("lessons_learned[]") }
-      #   it "for array" do
-      #     result = scope.filter(hash_element)          
-      #     expect(result).to be_a(Array)
-      #     expect(result.size).to eq(1)
-      #     expect(result.map(&:to_ruby_object).first).to eq(hash["body"]["stomach"])
-      #   end
-      # end
-
+      describe "lessons_learned[]" do
+        let(:scope) { subject.parse("lessons_learned[]") }
+        it "for array" do
+          result = scope.filter(hash_element)
+          expect(result).to be_a(Array)
+          expect(result.size).to eq(3)
+          expect(result.map(&:to_ruby_object)).to eq(hash["lessons_learned"])
+        end
+      end
     end
 
     describe "with empty scope" do

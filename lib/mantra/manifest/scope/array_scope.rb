@@ -28,7 +28,7 @@ module Mantra
             end
             self.send(function_name, element)
           when ""
-            [element]
+            element.content
           else
             raise ScopeParseError.new("Don't know how to apply scope to array " +
                                       "(scope: #{self.scope.inspect}, array: #{element.to_ruby_object.inspect})")
