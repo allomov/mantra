@@ -107,8 +107,8 @@ describe Mantra::Manifest::Element do
       end
       it "merges elements with the same name and add elements that didn't exist" do
         element1.merge(element2, force: true)
-        expect(element1.get("a")).to eq 1
-        expect(element1.get("b.c")).to eq 2
+        expect(element1.get("a")).to eq 3
+        expect(element1.get("b.c")).to eq 3
         expect(element1.get("b.d")).to eq 4
         expect(element1.get("b.e")).to eq 3
       end
