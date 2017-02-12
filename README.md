@@ -24,12 +24,15 @@ Mantra tends to be an easily extendable tool, so you can add new commands and tr
 
 While some actions performed on manifest can be automated, anther require special configuration and extra knowledges about source manifes. Here is a small glossery that I use:
 
-`Transformation Manifest` - config file that describes how your manifest should be udpated
+`Transformation Manifest` - config file that describes how your manifest should be udpated.
+
 `Source Manifest` - your source BOSH manifest, if you run templatizers on source manifest they can change it.
+
 `Target Manifest` - manifest that will contain extracted template properties, to restore source manifest you'll need to run merge tool with resulting source manifest.
+
 `Transform` - a ruby class that declares how specific transformation should be done.
 
-One more concept: no nokogiri and native dependencies.
+One more concept: **no nokogiri and native dependencies**.
 
 ### Dependencies
 
