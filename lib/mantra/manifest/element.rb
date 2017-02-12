@@ -90,6 +90,8 @@ module Mantra
         end
       end
 
+      # WARNING: merge method "obsorbs" and ruins the element from paramenters
+      # TOFIX: make duplicate of element structure that you merge
       def merge(element, options={})
         raise "not implemented"
       end

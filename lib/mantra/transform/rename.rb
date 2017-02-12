@@ -11,10 +11,13 @@ module Mantra
       alias_method :new_name, :to
       alias_method :result, :manifest
 
+      def result
+        @manifest
+      end
+
       def perform
         @manifest = previous_transform.result
         elemenents_to_rename = @manifest.select(section)
-
         elemenents_to_rename.each do |element|
           parent = element.parent
           raise Mantra::Transform::ValidationError.new ("parent should be a hash") unless parent.hash?

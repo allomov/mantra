@@ -14,15 +14,16 @@ module Mantra
         element = escape_root(element)
         raise merge_conflict_error(element) unless self.can_merge?(element)
         elements_to_add = element.content.dup
+        elements_to_add.each { |e| e.parent = self }
         merge_by_name(elements_to_add, options)
         merge_by_value(elements_to_add, options)
+        # keep the element structure consistent
         self.content.concat(elements_to_add)
         self
       end
 
       def find_children_by_scope(scope)
         return Element.create([]) unless scope.array?
-        # return 
         self.content.map do |element|
           if scope.match?(element)
             if scope.has_next?

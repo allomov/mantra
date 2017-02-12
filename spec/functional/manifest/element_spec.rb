@@ -19,6 +19,11 @@ describe Mantra::Manifest::Element do
         element1.merge(element2)
         expect(element1.to_ruby_object).to eq(source2)
       end
+
+      it "changed parents of merged elements to manifest element on which #merge method was called" do
+        element1.merge(element2)
+        expect(element2.content.content.first.parent).to eq(element1.content)
+      end
     end
 
     describe "arrays with objects that have names" do
@@ -86,6 +91,10 @@ describe Mantra::Manifest::Element do
       it "merges elements with the same name and add elements that didn't exist" do
         element1.merge(element2)
         expect(element1.vm_types.size).to eq 5
+      end
+      it "changed parents of merged elements to manifest element on which #merge method was called" do
+        element1.merge(element2)
+        expect(element2.content.content["azs"].parent).to eq(element1.content)
       end
     end
 

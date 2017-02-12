@@ -14,6 +14,8 @@ module Mantra
       def merge(element, options={})
         element = escape_root(element)
         raise merge_conflict_error(element) unless self.can_merge?(element)
+        # keep the element structure consistent
+        element.content.values.each { |v| v.parent = self }
         self.content.merge!(element.content) do |_, self_element, element_to_merge|
           self_element.merge(element_to_merge, options)
         end
