@@ -34,6 +34,7 @@ One more concept: no nokogiri and native dependencies.
 ### Examples
 
 - [Simple example of how to use a transform](https://github.com/allomov/mantra/blob/master/examples/filter-transform.md)
+- [Example of `mantra merge` command to update your manifest](https://github.com/allomov/mantra/blob/master/examples/merge-command.md)
 - [Convert BOSH v1 manifest to BOSH v2 manifest](https://github.com/allomov/mantra/blob/master/examples/convert-bosh-manifest-to-v2.md)
 - [Extract cloud config from BOSH v1 manifest](https://github.com/allomov/mantra/blob/master/examples/extract-cloud-config.md)
 
