@@ -31,6 +31,16 @@ While some actions performed on manifest can be automated, anther require specia
 
 One more concept: no nokogiri and native dependencies.
 
+### Dependencies
+
+Ruby.
+
+### How to install
+
+```
+gem install mantra
+```
+
 ### Examples
 
 - [Simple example of how to use a transform](https://github.com/allomov/mantra/blob/master/examples/filter-transform.md)
