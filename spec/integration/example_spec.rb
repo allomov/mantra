@@ -3,20 +3,18 @@ shared_examples_for "markdown example" do
   let(:temp_folder) { Dir.mktmpdir }
 
   before(:each) do
-
     Dir.chdir(temp_folder)
-    puts "in #{temp_folder}"
     processor.files.each_pair do |name, content|
       File.open(name, 'w') { |file| file.write(content) }
     end
   end
 
   describe "example" do
-    it "runs" do
+    it "is executed without errors" do
       stdout, status = run_mantra_command(processor.command)
       expect(status).to be_success
     end
-    it "works as expected" do
+    it "contains expected manifest" do
       stdout, status = run_mantra_command(processor.command)
       expect(stdout).to include(processor.output)
     end
@@ -35,8 +33,8 @@ end
 #   end
 # end
 
-# describe "convert bosh v1 manifest ro bosh v2 manifest" do
-#   it_should_behave_like "markdown example" do
-#     let(:markdown_file) { "extract-cloud-config.md" }
-#   end
-# end
+describe "convert bosh v1 manifest ro bosh v2 manifest" do
+  it_should_behave_like "markdown example" do
+    let(:markdown_file) { "extract-cloud-config.md" }
+  end
+end

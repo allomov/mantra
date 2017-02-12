@@ -88,5 +88,34 @@ mantra transform -m manifest.yml -t transform.yml
 ```
 
 ```output
-value
+networks:
+- name: redis_z1
+  subnets:
+  - cloud_properties:
+      name: YOUR_SUBNET_NAME
+    dns:
+    - 8.8.8.8
+    gateway: 10.0.0.1
+    range: 10.0.0.0/24
+    reserved:
+    - 10.0.0.2 - 10.0.0.49
+    static:
+    - 10.0.0.50 - 10.0.0.99
+    az: az1
+compilation:
+  cloud_properties:
+    cpu: 1
+  network: redis_z1
+  az: az1
+update:
+  canaries: 1
+  max_in_flight: 6
+  az: az1
+vm_types:
+- cloud_properties:
+    cpu: 1
+  name: redis_z1
+  stemcell:
+    name: bosh-vsphere-esxi-ubuntu-trusty-go_agent
+    version: latest
 ```
