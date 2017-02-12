@@ -27,6 +27,12 @@ describe "filter transform example" do
   end
 end
 
+describe "mantra merge command example" do
+  it_should_behave_like "markdown example" do
+    let(:markdown_file) { "merge-command.md" }
+  end
+end
+
 # describe "convert bosh v1 manifest ro bosh v2 manifest" do
 #   it_should_behave_like "markdown example" do
 #     let(:markdown_file) { "convert-bosh-manifest-to-v2.md" }

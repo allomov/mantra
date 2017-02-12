@@ -8,21 +8,24 @@ module Mantra
       alias_type :m
       attr_accessor :manifest
 
-      option :json,          "--json JSON",         "-j", "json in text format"
-      option :file,          "--file MANIFEST",     "-f", "File that should be merged to the manifest (not implemented)"
-      option :path,          "--path PATH",         "-p", "Path in Manifest where to merge this value"
+      option :json,          "--json JSON_STRING",  "-j", "json in text format"
+      option :file,          "--file JSON_FILE",    "-f", "File that should be merged to the manifest (not implemented)"
+      option :path,          "--scope PATH",        "-s", "Scope (or path) in Manifest where to merge this value"
       option :manifest_path, "--manifest MANIFEST", "-m", "Manifest path"
-      
-      # mantra merge -j "{\"var\": $value}" -m manifest.yml -p apps[name=ss]
+
       def perform
         if json.nil? && file.nil?
           raise "json of file should be specified"
         end
-        object_to_merge = JSON.parse(json)
+
+        json_string = json.nil? ? File.read(file) : json
+        object_to_merge = JSON.parse(json_string)
         element_to_merge = Mantra::Manifest::Element.create(object_to_merge)
         manifest = Mantra::Manifest.new(manifest_path)
-        manifst_element  = manifest.find(path || "")
-        manifst_element.merge(element_to_merge)
+        manifst_elements  = manifest.select(path || "")
+        manifst_elements.each do |e|
+          e.merge(element_to_merge, force: true)
+        end
         puts manifest.to_ruby_object.to_yaml
       end
 

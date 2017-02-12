@@ -4,21 +4,21 @@
 
 ### Description
 
-Mantra (/ˈmæntrə/, abr. **Man**ifest **Tra**nsformation) is a tool to ease work with BOSH manifests.
+Mantra (/ˈmæntrə/, abr. **Man**ifest **Tra**nsformation for BOSH) is a tool to ease work with BOSH manifests.
 
-It allows to do following:
+It allows to perform such routines as:
 
 * find manifest parts 
 * extract cloud config for BOSH v2 from your BOSH v1 manifest
 * convert you BOSH v1 manifest to BOSH v2 manifest
 * convert your manifest into bosh-cli templates with
   * extracted passwords
-  * extracted certificates to different files
-  * templatized network configuration
-  * extracted or changed properties
+  <!-- * extracted certificates to different files -->
+  <!-- * templatized network configuration -->
+  <!-- * extracted or changed properties -->
 * and much more
 
-Mantra is tend to be an easily extendable tool, so you can add new commands and transforms.
+Mantra tends to be an easily extendable tool, so you can add new commands and transforms by yourself. If you need have any questions or suggestions feel free to create an [issue on Github](https://github.com/allomov/mantra/issues) or contact [me](https://github.com/allomov) directly.
 
 ### Concepts
 
@@ -33,6 +33,7 @@ One more concept: no nokogiri and native dependencies.
 
 ### Examples
 
+- [Simple example of how to use a transform](https://github.com/allomov/mantra/blob/master/examples/filter-transform.md)
 - [Convert BOSH v1 manifest to BOSH v2 manifest](https://github.com/allomov/mantra/blob/master/examples/convert-bosh-manifest-to-v2.md)
 - [Extract cloud config from BOSH v1 manifest](https://github.com/allomov/mantra/blob/master/examples/extract-cloud-config.md)
 
@@ -45,4 +46,3 @@ rake
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/mantra. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
-

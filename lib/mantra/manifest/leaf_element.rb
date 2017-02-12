@@ -14,6 +14,7 @@ module Mantra
         if !options[:force]
           raise MergeConflictError.new("value conflict detected: #{self.content} != #{element.content}") if self.content != element.content
         end
+        self.content = element.content
         self
       end
 
