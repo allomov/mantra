@@ -15,8 +15,9 @@ module Mantra
       end
 
       def transforms
+        return @transforms unless @transforms.nil?
         previous_transform = self
-        transform_config["transforms"].map do |options|
+        @transforms = transform_config["transforms"].map do |options|
           options.merge!(previous_transform: previous_transform)
           previous_transform = Mantra::Transform.create(options)
         end
@@ -29,6 +30,11 @@ module Mantra
       def perform
         transforms.each do |t|
           t.run
+        end
+        unless transforms.last.nil?
+          puts transforms.last.result.to_ruby_object.to_yaml
+        else
+          puts {}.to_yaml
         end
       end
 

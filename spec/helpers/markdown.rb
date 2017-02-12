@@ -8,6 +8,9 @@ class TestExampleRender < Redcarpet::Render::Base
     @files ||= {}
   end
 
+  # TOFIX: for some wierd reason redcarpet does not always call `block_code`
+  # so if you start code with `\n---` it will not call `block_code` method
+  # strange
   def block_code(code, language)
     return if code.empty?
     if language.start_with?("file:")

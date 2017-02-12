@@ -8,10 +8,14 @@ module Mantra
 
       input "sections", description: "list of paths to elements that should be left after this transform ", type: :any
 
+      def result
+        @result
+      end
+
       def perform
         @result = Mantra::Manifest::Element.create({})
         manifest = previous_transform.result
-        sections.each do |p|
+        sections.each_with_index do |p, i|
           elements = manifest.select(p)
           elements.each do |e|
             direct_path = e.path
