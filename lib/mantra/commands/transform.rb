@@ -4,11 +4,13 @@ module Mantra
   class Commands
     class Transform < Command
       type :transform
-      alias_type :t
-      attr_accessor :manifest
+      aliases :t
+      description "Transform manifest using transform config"
 
       option :transform_config_path, "--config CONFIG",     "-t", "Transformation config path"
       option :manifest_path,         "--manifest MANIFEST", "-m", "Manifest path"
+
+      attr_accessor :manifest
 
       def transform_config
         @transform_config ||= YAML.load_file(transform_config_path)

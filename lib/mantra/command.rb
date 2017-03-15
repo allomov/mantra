@@ -9,8 +9,22 @@ module Mantra
     end
 
     def self.usage
-      "\n\tUsage:  \tmantra <action> [options]\n" +
-      "\tactions:\t#{self.subclasses.map { |s| s.type }.join(", ")}\n\n"
+      "Mantra is Manifest Transformation tool to ease work with BOSH manifest.\n" +
+      "\nUsage:\tmantra <command> [options]" +
+      "\n\nCommands:\n" + 
+      self.subclasses.map { |s| "#{" "*6}#{s.type}#{" "*20}\t#{s.description}" }.join("\n") +
+      "\n\n" +
+      "For help on any command run:\n" +
+      ["mantra <command> -h", "mantra <command> help", "mantra <command> --help"].map { |s| " " * 6 + s }.join("\n") +
+      "\n\n"
+    end
+
+    def self.description(description=nil)
+      description.nil? ? full_description : (@description = description)
+    end
+
+    def self.full_description
+      [@description, aliases.empty? ? nil : "(aliases: #{aliases.join(", ")})"].compact.join(" ")
     end
 
     def self.option(name, long_option, short_option, description)
@@ -33,7 +47,7 @@ module Mantra
     def parse_options
       @options = {}
       OptionParser.new do |options_parser|
-        options_parser.banner = "Usage: mantra #{} [options]"
+        options_parser.banner = "Usage: mantra [options]"
         self.class.option_descriptors.each do |option|
           option_name = option.shift.to_s
           options_parser.on(*option) do |value|
@@ -50,3 +64,7 @@ end
 require "mantra/commands/find"
 require "mantra/commands/merge"
 require "mantra/commands/transform"
+require "mantra/commands/highlight"
+require "mantra/commands/render_release_template"
+require "mantra/commands/detect_certificates"
+require "mantra/commands/help"

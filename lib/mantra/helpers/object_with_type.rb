@@ -15,8 +15,13 @@ module Mantra
           type.nil? ? @type : (@type = type.to_sym)
         end
 
-        def alias_type(alias_type=nil)
-          alias_type.nil? ? @alias_type : (@alias_type = alias_type.to_sym)
+        def alias_type(alias_type)
+          aliases(alias_type)
+        end
+
+        def aliases(*args)
+          @aliases = [] if @aliases.nil?
+          args.empty? ? @aliases : (@aliases.concat(args.map {|a| a.to_sym }))
         end
 
         def create(options)
@@ -31,7 +36,7 @@ module Mantra
         end
 
         def find_by_type(type)
-          self.subclasses.find { |s| s.type == type || s.alias_type == type }
+          self.subclasses.find { |s| s.type == type || s.aliases.include?(type) }
         end
 
         def inherited(subclass)

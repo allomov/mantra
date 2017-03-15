@@ -5,7 +5,9 @@ module Mantra
   class Commands
     class Find < Command
       type :find
-      alias_type :f
+      aliases :f
+      description "Transform manifest using transform config"
+
       option :scope,       "--scope scope-path",       "-s scope",         "path scope you want to find"
       option :manifest,    "--manifest manifest-file", "-m manifest-file", "manifest"
       option :format,      "--format format",          "-f format",        "format (yaml or json)"

@@ -2,16 +2,24 @@
 
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 require "mantra"
+include Mantra::Helpers
 
-if ARGV.empty?
+if ARGV.empty? || ARGV.first == "-h" || ARGV.first == "--help"
   puts Mantra::Command.usage
   exit 0
 end
 
-command_type = ARGV.shift
-options = {type: command_type.to_sym, args: ARGV}
+command_name = ARGV.shift
+options = {type: command_name.to_sym, args: ARGV}
 
-command = Mantra::Command.create(options)
+begin
+  command = Mantra::Command.create(options)
+  command.run
+rescue ObjectWithType::UnknownType, ObjectWithType::UnspecifiedType
+  puts "Error: Unknown command '#{command_name}', see command usage\n\n"
+  puts Mantra::Command.usage
+  exit 1
+end
 
-command.run
+
 

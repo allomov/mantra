@@ -5,14 +5,17 @@ module Mantra
   class Commands
     class Merge < Command
       type :merge
-      alias_type :m
-      attr_accessor :manifest
-
-      option :json,          "--json JSON_STRING",  "-j", "json in text format"
-      option :file,          "--file JSON_FILE",    "-f", "File that should be merged to the manifest (not implemented)"
+      aliases :m
+      description "Merge object to manifest to specified path"
+      
+      option :json,          "--json JSON_STRING",  "-j", "String with JSON object that should be merged to the manifest"
+      option :file,          "--file JSON_FILE",    "-f", "JSON file that should be merged to the manifest"
+      option :yaml_file,     "--yaml YAML_FILE",    "-y", "File that should be merged to the manifest (not implemented)"
       option :path,          "--scope PATH",        "-s", "Scope (or path) in Manifest where to merge this value"
       option :manifest_path, "--manifest MANIFEST", "-m", "Manifest path"
 
+      attr_accessor :manifest
+      
       def perform
         if json.nil? && file.nil?
           raise "json of file should be specified"
