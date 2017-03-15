@@ -89,10 +89,42 @@ And run this command:
 ```command
 mantra transform -m manifest.yml -t transform.yml
 ```
-<!-- 
+
 And get following output:
 
 ```output
-
+---
+releases:
+- name: cf-redis
+  version: latest
+- name: routing
+  version: 0.143.0
+update:
+  canaries: 1
+  max_in_flight: 6
+instance_groups:
+- instances: 3
+  name: dedicated-node
+  networks:
+  - name: redis_z1
+    static_ips:
+    - 10.0.0.51
+  persistent_disk: 4096
+  resource_pool: redis_z1
+  jobs:
+  - name: dedicated-node
+    release: cf-redis
+  - name: syslog-configurator
+    release: cf-redis
+  azs: az1
+- instances: 1
+  lifecycle: errand
+  name: smoke-tests
+  networks:
+  - name: redis_z1
+  resource_pool: redis_z1
+  jobs:
+  - name: smoke-tests
+    release: cf-redis
+  azs: az1
 ```
- -->
