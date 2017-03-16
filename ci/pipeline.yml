@@ -1,15 +1,10 @@
 ---
 resources:
-- name: merrill-manifest-generator-dev
+- name: github-repo
   type: git
   source:
-    uri: {{github-repo}}
-    branch: manifest-generator-dev
-    private_key: {{git-repo-private-key}}
-- name: slack-notification
-  type: slack-notification
-  source:
-    url: {{slack-notification-url}}
+    uri: https://github.com/allomov/mantra.git
+    branch: master
 
 jobs:
 - name: dev-version

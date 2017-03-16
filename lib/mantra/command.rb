@@ -9,10 +9,10 @@ module Mantra
     end
 
     def self.usage
-      "Mantra is Manifest Transformation tool to ease work with BOSH manifest.\n" +
+      "Mantra is a manifest transformation tool to ease work with BOSH manifest.\n" +
       "\nUsage:\tmantra <command> [options]" +
       "\n\nCommands:\n" + 
-      self.subclasses.map { |s| "#{" "*6}#{s.type}#{" "*20}\t#{s.description}" }.join("\n") +
+      self.subclasses.map { |s| "#{" "*6}#{s.type}#{" "*(25 - s.type.size)}\t#{s.description}" }.join("\n") +
       "\n\n" +
       "For help on any command run:\n" +
       ["mantra <command> -h", "mantra <command> help", "mantra <command> --help"].map { |s| " " * 6 + s }.join("\n") +
